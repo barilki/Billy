@@ -9,7 +9,7 @@ import 'package:tesseract_ocr/tesseract_ocr.dart';
 import 'companies/ocr_companies.dart';
 
 class OcrPage extends StatefulWidget {
-  String companyName;
+  final String companyName;
   OcrPage({this.companyName});
 
   @override

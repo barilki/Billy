@@ -12,7 +12,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 class MainCompanies extends StatefulWidget {
-  String companyName;
+  final String companyName;
   final String text;
   static Future<String> sharedPrefTxt = SharedPrefs.getKey('filteredTxt');
 
@@ -159,6 +159,7 @@ class _MainCompaniesState extends State<MainCompanies> {
 
 class InvoicesList extends StatelessWidget {
   final String companyName;
+  final user = FirebaseAuth.instance.currentUser;
 
   InvoicesList({this.companyName});
 
@@ -188,9 +189,8 @@ class InvoicesList extends StatelessWidget {
                 trailing: IconButton(
                   icon: new Icon(Icons.image),
                   onPressed: () async{
-                    print(await FirebaseFirestore.instance.collection("users").doc(
-                        _MainCompaniesState.user.uid)
-                        .collection(companyName).get());
+
+                    print(document.data()['url']);
                   },
                   color: Colors.orange,
                 ),
