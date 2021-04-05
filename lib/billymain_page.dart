@@ -158,53 +158,6 @@ class _BillyMainPageState extends State<BillyMainPage> {
     await client.logout();
   }
 
-  //Extract all the text from the entire PDF file.
-  Future<void> _extractAllText() async {
-    //Load the existing PDF document.
-    PdfDocument document =
-        PdfDocument(inputBytes: await _readDocumentData('ABC.pdf'));
-
-    //Create the new instance of the PdfTextExtractor.
-    PdfTextExtractor extractor = PdfTextExtractor(document);
-
-    //Extract all the text from the document.
-    String text = extractor.extractText();
-
-    //Display the text.
-    _showResult(text);
-  }
-
-  //Read the PDF document from the folder where it is saved
-  Future<List<int>> _readDocumentData(String name) async {
-    final ByteData data = await rootBundle.load('pdf/$name');
-    return data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-  }
-
-  //Display the extracted text
-  void _showResult(String text) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Bill'),
-            content: Scrollbar(
-              child: SingleChildScrollView(
-                child: Text(text),
-                physics: BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics()),
-              ),
-            ),
-            actions: [
-              FlatButton(
-                child: Text('Close'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
-            ],
-          );
-        });
-  }
 
   final FirebaseAuth auth = FirebaseAuth.instance;
   Future<String> inputData() async{

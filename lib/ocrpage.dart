@@ -10,7 +10,6 @@ import 'companies/ocr_companies.dart';
 
 class OcrPage extends StatefulWidget {
   String companyName;
-
   OcrPage({this.companyName});
 
   @override
@@ -25,7 +24,6 @@ class _OcrPageState extends State<OcrPage> {
 
   _OcrPageState({@required this.companyName});
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,40 +36,45 @@ class _OcrPageState extends State<OcrPage> {
         children: [
           _pickedImage == null
               ? Container(
-            height: 300,
-            color: Colors.grey[300],
-            child: Icon(
-              Icons.image,
-              size: 100,
-            ),
-          )
+                  height: 300,
+                  color: Colors.grey[300],
+                  child: Icon(
+                    Icons.image,
+                    size: 100,
+                  ),
+                )
               : Container(
-            height: 300,
-            decoration: BoxDecoration(
-                color: Colors.grey[300],
-                image: DecorationImage(
-                  image: FileImage(_pickedImage),
-                  fit: BoxFit.fill,
-                )),
-          ),
+                  height: 300,
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      image: DecorationImage(
+                        image: FileImage(_pickedImage),
+                        fit: BoxFit.fill,
+                      )),
+                ),
           Row(
             children: [
-              Container(height: 50,
-              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: ElevatedButton(
-                style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.green)),
-                child: Text(
-                  'Add file',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              ),),
               Container(
                 height: 50,
                 margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                 child: ElevatedButton(
-                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.green)),
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.green)),
+                  child: Text(
+                    'Add file',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                height: 50,
+                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.green)),
                   child: Text(
                     'Open camera to scan',
                     style: TextStyle(
@@ -82,25 +85,24 @@ class _OcrPageState extends State<OcrPage> {
                     setState(() {
                       _scanning = true;
                     });
-                    _pickedImage =
-                    await ImagePicker.pickImage(source: ImageSource.gallery);
+                    _pickedImage = await ImagePicker.pickImage(
+                        source: ImageSource.gallery);
 
                     //Get current user name
                     var user = FirebaseAuth.instance.currentUser;
 
-                    //Create a Storage Ref / username
-                    var storageRef = FirebaseStorage.instance.ref("$user/$companyName/partner.pdf");
-                    storageRef.putFile(_pickedImage);
+                    // //Create a Storage Ref / username
+                    // var storageRef = FirebaseStorage.instance
+                    //     .ref("$user/$companyName/partner.pdf");
+                    // storageRef.putFile(_pickedImage);
 
-
-
-                    _extractText =
-                    await TesseractOcr.extractText(_pickedImage.path, language: "Hebrew");
+                    _extractText = await TesseractOcr.extractText(
+                        _pickedImage.path,
+                        language: "Hebrew");
                     await strReg(_extractText);
                     setState(() {
                       _scanning = false;
                     });
-
                   },
                 ),
               ),
@@ -110,69 +112,64 @@ class _OcrPageState extends State<OcrPage> {
           _scanning
               ? Center(child: CircularProgressIndicator())
               : Icon(
-            Icons.done,
-            size: 40,
-            color: Colors.green,
-          ),
+                  Icons.done,
+                  size: 40,
+                  color: Colors.green,
+                ),
           SizedBox(height: 20),
           Center(
             child: FutureBuilder<String>(
-              future: SharedPrefs.getKey("filteredTxt"),
-              builder: (context, snapshot) {
-                return Text(snapshot.data??""
-                  // strReg(_extractText).toString(),
-                  // textAlign: TextAlign.center,
-                  // style: TextStyle(
-                  //   fontSize: 30,
-                  //   fontWeight: FontWeight.bold,
-                  );
-              }
-            ),
+                future: SharedPrefs.getKey("filteredTxt"),
+                builder: (context, snapshot) {
+                  return Text(snapshot.data ?? ""
+                      // strReg(_extractText).toString(),
+                      // textAlign: TextAlign.center,
+                      // style: TextStyle(
+                      //   fontSize: 30,
+                      //   fontWeight: FontWeight.bold,
+                      );
+                }),
           )
         ],
       ),
     );
   }
 
-}
-
 //Retrieving information according to the company required
-void getDetails() async{
-  Future<String> companyName = SharedPrefs.getCompanyName('compName');
-  if (await companyName == 'IEC') {
-    OcrCompanies(companyName: await companyName,
-        text: await SharedPrefs.getKey('filteredTxt'),
-        startWordForSum: 'לתשלום שח',
-        endWordForSum: 'בהוצאות',
-        startWordForDate: 'מ-',
-        endWordForDate: 'תאריך עריכת החשבון',
-        startWordForID: 'חשבון חוזה',
-        endWordForID: 'חשבון לתקופה').insertDetails();
+  void getDetails() async {
+    Future<String> companyName = SharedPrefs.getCompanyName('compName');
+    if (await companyName == 'IEC') {
+      OcrCompanies(
+          pickedImage: _pickedImage,
+          companyName: await companyName,
+          text: await SharedPrefs.getKey('filteredTxt'),
+          startWordForSum: 'לתשלום שח',
+          endWordForSum: 'בהוצאות',
+          startWordForDate: 'מ-',
+          endWordForDate: 'תאריך עריכת החשבון',
+          startWordForID: 'חשבון חוזה',
+          endWordForID: 'חשבון לתקופה')
+          .insertDetails();
+    } else if (await companyName == 'Water company') {
+      print("a");
+    } else if (await companyName == 'Gas company') {
+      print("b");
+    } else if (await companyName == 'Property Taxes company') {
+      print("c");
+    } else if (await companyName == 'Cellular company') {
+      print("d");
+    } else if (await companyName == 'TV company') {
+      print("e");
+    }
+  }
 
-  }
-  else if (await companyName == 'Water company') {
-    print("a");
-  }
-  else if (await companyName == 'Gas company') {
-    print("b");
-  }
-  else if (await companyName == 'Property Taxes company') {
-    print("c");
-  }
-  else if (await companyName == 'Cellular company') {
-    print("d");
-  }
-  else if (await companyName == 'TV company') {
-    print("e");
+
+  //Regex getting string
+  strReg(String str) async {
+    String newStr = str.replaceAll(RegExp('[a-zA-Z!-,:-@[-`{-~]'), '');
+    await SharedPrefs.setKey('filteredTxt', newStr);
+    getDetails();
   }
 }
-
-//Regex getting string
-strReg(String str) async {
-  String newStr = str.replaceAll(RegExp('[a-zA-Z!-,:-@[-`{-~]'), '');
-  await SharedPrefs.setKey('filteredTxt', newStr);
-  getDetails();
-}
-
 
 

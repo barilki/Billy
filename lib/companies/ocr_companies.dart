@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'main_companies.dart';
 
 class OcrCompanies {
+  final File pickedImage;
   final String companyName;
   final String text;
   final String startWordForSum;
@@ -14,6 +18,7 @@ class OcrCompanies {
   final String endWordForID;
 
   OcrCompanies({
+    @required this.pickedImage,
     @required this.companyName,
     @required this.text,
     @required this.startWordForSum,
@@ -25,11 +30,16 @@ class OcrCompanies {
   });
 
   //add current details to collection into firestore
-  insertDetails() async {
+  Future<void> insertDetails() async {
     var user = FirebaseAuth.instance.currentUser;
     var uid = user.uid;
+    String invoiceID = await getID(); //get current invoice id (futrue type)
+    String path = "$user/$companyName/$invoiceID.jpeg"; //String of path
+    var storageRef = FirebaseStorage.instance.ref("$path".replaceAll(RegExp("\\s+"),"")); //Create a Storage Ref / username
+    storageRef.putFile(pickedImage); //Upload photo to firebase storage
+    String url = await (storageRef.getDownloadURL());
     final CollectionReference vaultCollection = FirebaseFirestore.instance.collection('users').doc(uid).collection(companyName);
-    vaultCollection.add({"date": await getDate(), "id": await getID(), "price": await getSum()});
+    vaultCollection.add({"date": await getDate(), "id": await getID(), "price": await getSum(), "url": url});
   }
 
   //return sum from invoice
@@ -52,6 +62,7 @@ class OcrCompanies {
     final endIndex = await text.indexOf(endWordForID, startIndex + startWordForID.length);
     return text.substring(startIndex + startWordForID.length, endIndex);
   }
+
 
 }
 

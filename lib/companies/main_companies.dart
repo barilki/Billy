@@ -6,20 +6,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 class MainCompanies extends StatefulWidget {
   String companyName;
   final String text;
   static Future<String> sharedPrefTxt = SharedPrefs.getKey('filteredTxt');
 
-
   MainCompanies({Key key, this.companyName, this.text}) : super(key: key);
 
   //@override
   //_MainCompaniesState createState() =>
-     //_MainCompaniesState(companyName: this.companyName, text: this.text);
+  //_MainCompaniesState(companyName: this.companyName, text: this.text);
   @override
   _MainCompaniesState createState() => _MainCompaniesState();
 }
@@ -43,7 +44,9 @@ class _MainCompaniesState extends State<MainCompanies> {
         backgroundColor: kBackGroundColor,
         title: Text(widget.companyName),
       ),
-      body: new InvoicesList(),
+      body: new InvoicesList(
+        companyName: widget.companyName,
+      ),
       floatingActionButton: SpeedDial(
         backgroundColor: Colors.red,
         closeManually: true,
@@ -57,7 +60,8 @@ class _MainCompaniesState extends State<MainCompanies> {
                 await Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => OcrPage(
+                        builder: (context) =>
+                            OcrPage(
                               companyName: widget.companyName,
                             )));
               }),
@@ -79,13 +83,12 @@ class _MainCompaniesState extends State<MainCompanies> {
     );
   }
 
-
   Future<void> showInformationDialog(BuildContext context) async {
     return await showDialog(
         context: context,
         builder: (context) {
           final TextEditingController _textEditingController =
-              TextEditingController();
+          TextEditingController();
           String clientID, invoiceID, invoiceDate, invoiceSum;
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
@@ -100,7 +103,7 @@ class _MainCompaniesState extends State<MainCompanies> {
                           return value.isNotEmpty ? null : "Invalid Field";
                         },
                         decoration:
-                            InputDecoration(hintText: "Enter Client ID:"),
+                        InputDecoration(hintText: "Enter Client ID:"),
                       ),
                       TextFormField(
                         validator: (value) {
@@ -108,7 +111,7 @@ class _MainCompaniesState extends State<MainCompanies> {
                           return value.isNotEmpty ? null : "Invalid Field";
                         },
                         decoration:
-                            InputDecoration(hintText: "Enter Invoice ID:"),
+                        InputDecoration(hintText: "Enter Invoice ID:"),
                       ),
                       TextFormField(
                         validator: (value) {
@@ -116,7 +119,7 @@ class _MainCompaniesState extends State<MainCompanies> {
                           return value.isNotEmpty ? null : "Invalid Field";
                         },
                         decoration:
-                            InputDecoration(hintText: "Enter Invoice Date:"),
+                        InputDecoration(hintText: "Enter Invoice Date:"),
                       ),
                       TextFormField(
                         validator: (value) {
@@ -136,7 +139,7 @@ class _MainCompaniesState extends State<MainCompanies> {
                       FirebaseFirestore.instance
                           .collection("users")
                           .doc(user.uid)
-                          .collection("IEC")
+                          .collection(widget.companyName)
                           .add({
                         "cid": clientID,
                         "iid": invoiceID,
@@ -152,30 +155,54 @@ class _MainCompaniesState extends State<MainCompanies> {
           });
         });
   }
-
 }
 
 class InvoicesList extends StatelessWidget {
+  final String companyName;
+
+  InvoicesList({this.companyName});
+
   @override
   Widget build(BuildContext context) {
-    return new StreamBuilder (
-      stream: FirebaseFirestore.instance
-          .collection("users")
-          .doc(_MainCompaniesState.user.uid)
-          .collection("IEC")
-          .snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData) return new Text('Loading...');
-        return new ListView(
-          children: snapshot.data.docs.map((document) {
-            return new ListTile(
-              title: new Text(document.data()['date']),
-              subtitle: new Text(document.data()['price']),
-              trailing: Icon(Icons.image),
-            );
-          }).toList(),
-        );
-      },
+    return new StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection("users")
+            .doc(_MainCompaniesState.user.uid)
+            .collection(companyName)
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) return new Text('Loading...');
+          return new ListView(
+            children: snapshot.data.docs.map((document) {
+              return new ListTile(
+                title: new Text("Date: " + document.data()['date']),
+                subtitle: Row(
+                  children: [
+                    new Text("Price: " + document.data()['price']),
+                    SizedBox(width: 10.0),
+                    new Text("Invoice ID: "),
+                    SizedBox(width: 10.0),
+                    new Text("Client ID: "),
+                  ],
+                ),
+                trailing: IconButton(
+                  icon: new Icon(Icons.image),
+                  onPressed: () async{
+                    print(await FirebaseFirestore.instance.collection("users").doc(
+                        _MainCompaniesState.user.uid)
+                        .collection(companyName).get());
+                  },
+                  color: Colors.orange,
+                ),
+                leading: Icon(Icons.account_circle),
+                horizontalTitleGap: 10.0,
+              );
+            }).toList(),
+          );
+        }
     );
   }
+
+
 }
+
