@@ -9,7 +9,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 class MainCompanies extends StatefulWidget {
   final String companyName;
