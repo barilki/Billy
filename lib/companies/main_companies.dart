@@ -12,15 +12,11 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 class MainCompanies extends StatefulWidget {
-  String companyName;
+  final String companyName;
   final String text;
   static Future<String> sharedPrefTxt = SharedPrefs.getKey('filteredTxt');
 
   MainCompanies({Key key, this.companyName, this.text}) : super(key: key);
-
-  //@override
-  //_MainCompaniesState createState() =>
-  //_MainCompaniesState(companyName: this.companyName, text: this.text);
   @override
   _MainCompaniesState createState() => _MainCompaniesState();
 }
@@ -28,8 +24,6 @@ class MainCompanies extends StatefulWidget {
 class _MainCompaniesState extends State<MainCompanies> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   static final user = FirebaseAuth.instance.currentUser;
-
-  //_MainCompaniesState({this.companyName, this.text});
 
   @override
   void initState() {
@@ -87,8 +81,6 @@ class _MainCompaniesState extends State<MainCompanies> {
     return await showDialog(
         context: context,
         builder: (context) {
-          final TextEditingController _textEditingController =
-          TextEditingController();
           String clientID, invoiceID, invoiceDate, invoiceSum;
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
@@ -141,10 +133,10 @@ class _MainCompaniesState extends State<MainCompanies> {
                           .doc(user.uid)
                           .collection(widget.companyName)
                           .add({
-                        "cid": clientID,
-                        "iid": invoiceID,
-                        "date": invoiceDate,
-                        "price": invoiceSum
+                        "clientID": clientID,
+                        "invoiceID": invoiceID,
+                        "invoiceDate": invoiceDate,
+                        "invoiceSum": invoiceSum
                       });
                       Navigator.of(context).pop();
                     }
@@ -159,9 +151,7 @@ class _MainCompaniesState extends State<MainCompanies> {
 
 class InvoicesList extends StatelessWidget {
   final String companyName;
-
   InvoicesList({this.companyName});
-
   @override
   Widget build(BuildContext context) {
     return new StreamBuilder(
@@ -175,26 +165,24 @@ class InvoicesList extends StatelessWidget {
           return new ListView(
             children: snapshot.data.docs.map((document) {
               return new ListTile(
-                title: new Text("Date: " + document.data()['date']),
+                title: new Text("Date: " + document.data()['invoiceDate']),
                 subtitle: Row(
                   children: [
-                    new Text("Price: " + document.data()['price']),
+                    new Text("Price: " + document.data()['invoiceSum']),
                     SizedBox(width: 10.0),
-                    new Text("Invoice ID: "),
+                    new Text("Invoice ID: " + document.data()['invoiceID']),
                     SizedBox(width: 10.0),
-                    new Text("Client ID: "),
+                    new Text("Client ID: " + document.data()['clientID']),
                   ],
                 ),
                 trailing: IconButton(
                   icon: new Icon(Icons.image),
                   onPressed: () async{
-                    print(await FirebaseFirestore.instance.collection("users").doc(
-                        _MainCompaniesState.user.uid)
-                        .collection(companyName).get());
+                    print(FirebaseFirestore.instance.collection("users").doc(_MainCompaniesState.user.uid).collection(companyName).get());
                   },
                   color: Colors.orange,
                 ),
-                leading: Icon(Icons.account_circle),
+                leading: Icon(Icons.bolt, color: Colors.yellow),
                 horizontalTitleGap: 10.0,
               );
             }).toList(),
