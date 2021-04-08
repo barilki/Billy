@@ -5,17 +5,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/services.dart';
-import 'dart:io';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class MainCompanies extends StatefulWidget {
   final String companyName;
   final String text;
   static Future<String> sharedPrefTxt = SharedPrefs.getKey('filteredTxt');
-
   MainCompanies({Key key, this.companyName, this.text}) : super(key: key);
+
   @override
   _MainCompaniesState createState() => _MainCompaniesState();
 }
@@ -24,11 +21,6 @@ class _MainCompaniesState extends State<MainCompanies> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   static final user = FirebaseAuth.instance.currentUser;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,8 +62,15 @@ class _MainCompaniesState extends State<MainCompanies> {
               label: "Manually Add",
               onTap: () async {
                 await showInformationDialog(context);
-              })
+              }),
         ],
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          children: [
+            Text("Total Invoices sum: " + InvoicesList.sum.toString() + " ₪")
+          ],
+        ),
       ),
     );
   }
@@ -80,7 +79,7 @@ class _MainCompaniesState extends State<MainCompanies> {
     return await showDialog(
         context: context,
         builder: (context) {
-          String clientID, invoiceID, invoiceDate, invoiceSum;
+          String clientID, invoiceID, invoiceDate,invoiceSum;
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
               content: Form(
@@ -150,6 +149,7 @@ class _MainCompaniesState extends State<MainCompanies> {
 
 class InvoicesList extends StatelessWidget {
   final String companyName;
+  static int sum = 0; //sum for counting total invoices sum
   InvoicesList({this.companyName});
   @override
   Widget build(BuildContext context) {
@@ -161,6 +161,10 @@ class InvoicesList extends StatelessWidget {
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) return new Text('Loading...');
+          //snapshot to calculate invoices total sum
+          snapshot.data.docs.forEach((element) {
+            sum = sum + int.parse(element.data()['invoiceSum']);
+          });
           return new ListView(
             children: snapshot.data.docs.map((document) {
               return new ListTile(
@@ -176,8 +180,8 @@ class InvoicesList extends StatelessWidget {
                 ),
                 trailing: IconButton(
                   icon: new Icon(Icons.image),
-                  onPressed: () async{
-                    print(FirebaseFirestore.instance.collection("users").doc(_MainCompaniesState.user.uid).collection(companyName).get());
+                  onPressed: () async {
+                    //print(await document.data()['url']);
                   },
                   color: Colors.orange,
                 ),
@@ -185,10 +189,12 @@ class InvoicesList extends StatelessWidget {
                 horizontalTitleGap: 10.0,
               );
             }).toList(),
+
           );
         }
     );
   }
+
 
 
 }
