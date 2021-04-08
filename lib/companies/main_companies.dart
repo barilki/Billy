@@ -6,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class MainCompanies extends StatefulWidget {
   final String companyName;
@@ -68,7 +70,7 @@ class _MainCompaniesState extends State<MainCompanies> {
       bottomNavigationBar: BottomAppBar(
         child: Row(
           children: [
-            Text("Total Invoices sum: " + InvoicesList.sum.toString() + " ₪")
+            Text("Total Invoices sum: " + InvoicesList._sum.toString() + " ₪")
           ],
         ),
       ),
@@ -149,11 +151,11 @@ class _MainCompaniesState extends State<MainCompanies> {
 
 class InvoicesList extends StatelessWidget {
   final String companyName;
-  static int sum = 0; //sum for counting total invoices sum
+  static double _sum = 0; //sum for counting total invoices sum
   InvoicesList({this.companyName});
   @override
   Widget build(BuildContext context) {
-    return new StreamBuilder(
+    return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection("users")
             .doc(_MainCompaniesState.user.uid)
@@ -161,27 +163,33 @@ class InvoicesList extends StatelessWidget {
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) return new Text('Loading...');
-          //snapshot to calculate invoices total sum
-          snapshot.data.docs.forEach((element) {
-            sum = sum + int.parse(element.data()['invoiceSum']);
-          });
-          return new ListView(
+          else {
+            //snapshot to calculate invoices total sum
+            snapshot.data.docs.forEach((element) {
+              _sum += double.parse(element.data()['invoiceSum']);
+            }
+            );
+          }
+          return ListView(
             children: snapshot.data.docs.map((document) {
-              return new ListTile(
-                title: new Text("Date: " + document.data()['invoiceDate']),
+              return ListTile(
+                title: Text("Date: " + document.data()['invoiceDate']),
                 subtitle: Row(
                   children: [
-                    new Text("Price: " + document.data()['invoiceSum']),
+                    Text("Sum: " + document.data()['invoiceSum']),
                     SizedBox(width: 10.0),
-                    new Text("Invoice ID: " + document.data()['invoiceID']),
+                    Text("Invoice ID: " + document.data()['invoiceID']),
                     SizedBox(width: 10.0),
-                    new Text("Client ID: " + document.data()['clientID']),
+                    //Text("Client ID: " + document.data()['clientID']),
                   ],
                 ),
                 trailing: IconButton(
-                  icon: new Icon(Icons.image),
+                  icon: Icon(Icons.image),
                   onPressed: () async {
-                    //print(await document.data()['url']);
+                    String url = await document.data()['invoiceUrl'];
+                    if (url != null) {
+                      await urlPhoto(context, url);
+                    }
                   },
                   color: Colors.orange,
                 ),
@@ -189,13 +197,27 @@ class InvoicesList extends StatelessWidget {
                 horizontalTitleGap: 10.0,
               );
             }).toList(),
-
           );
         }
     );
   }
 
-
+  //Get url as a string and open inside alert dialog
+  Future<void> urlPhoto(BuildContext context,String url) async {
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              title: Row(
+                  children:[
+                    Image.network(url,
+                      width: 250, height: 250, fit: BoxFit.contain,),
+                  ]
+              ),
+            );
+          });
+        });
+  }
 
 }
-

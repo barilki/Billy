@@ -36,7 +36,8 @@ dependencies:
   syncfusion_flutter_pdf: ^18.4.32-beta
   #extract data from mail
   imap_client: ^0.2.9
-
+  url_launcher: ^6.0.3
+  webview_flutter: ^2.0.4
   image_picker: ^0.5.4+3
   #ocr
   tesseract_ocr: ^0.3.1

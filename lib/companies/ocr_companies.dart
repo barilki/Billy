@@ -39,7 +39,7 @@ class OcrCompanies {
     storageRef.putFile(pickedImage); //Upload photo to firebase storage
     String url = await (storageRef.getDownloadURL());
     final CollectionReference vaultCollection = FirebaseFirestore.instance.collection('users').doc(uid).collection(companyName);
-    vaultCollection.add({"date": await getDate(), "id": await getID(), "price": await getSum(), "url": url});
+    vaultCollection.add({"invoiceDate": await getDate(), "invoiceID": await getID(), "invoiceSum": await getSum(), "invoiceUrl": url});
   }
 
   //return sum from invoice
