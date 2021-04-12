@@ -127,6 +127,8 @@ class _BillyMainPageState extends State<BillyMainPage> {
               IconButton(
                 icon: Icon(Icons.chat),
                 onPressed: () async {
+                  await Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => OcrPage()));
                 },
               ),
             ],
