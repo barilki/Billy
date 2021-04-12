@@ -118,17 +118,15 @@ class _BillyMainPageState extends State<BillyMainPage> {
           child: Row(
             children: [
               IconButton(
-                icon: Icon(Icons.mail),
+                icon: Icon(Icons.details),
                 onPressed: () {
-                  _main();
+                  aboutUs(context);
                 },
               ),
               Spacer(),
               IconButton(
-                icon: Icon(Icons.camera_alt),
+                icon: Icon(Icons.chat),
                 onPressed: () async {
-                  await Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => OcrPage()));
                 },
               ),
             ],
@@ -157,6 +155,26 @@ class _BillyMainPageState extends State<BillyMainPage> {
     // close connection
     await client.logout();
   }
+
+
+
+  //Get url as a string and open inside alert dialog
+  Future<void> aboutUs(BuildContext context) async {
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              title: Row(
+                  children:[
+                    Text('Application Build by'),
+                  ]
+              ),
+            );
+          });
+        });
+  }
+
 
 
   final FirebaseAuth auth = FirebaseAuth.instance;

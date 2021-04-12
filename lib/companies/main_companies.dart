@@ -6,8 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:search_app_bar/search_app_bar.dart';
+
 
 class MainCompanies extends StatefulWidget {
   final String companyName;
@@ -22,6 +22,7 @@ class MainCompanies extends StatefulWidget {
 class _MainCompaniesState extends State<MainCompanies> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   static final user = FirebaseAuth.instance.currentUser;
+  final TextEditingController _search = new TextEditingController();
 
 
   @override
@@ -30,10 +31,15 @@ class _MainCompaniesState extends State<MainCompanies> {
       appBar: AppBar(
         backgroundColor: kBackGroundColor,
         title: Text(widget.companyName),
+        actions: [
+          IconButton(icon: Icon(Icons.search), onPressed: () {
+            setState(() {
+              searchList();
+            });
+          })
+        ],
       ),
-      body: new InvoicesList(
-        companyName: widget.companyName,
-      ),
+      body: InvoicesList(companyName: widget.companyName),
       floatingActionButton: SpeedDial(
         backgroundColor: Colors.red,
         closeManually: true,
@@ -67,17 +73,14 @@ class _MainCompaniesState extends State<MainCompanies> {
               }),
         ],
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          children: [
-            Text("Total Invoices sum: " + InvoicesList._sum.toString() + " ₪")
-          ],
-        ),
-      ),
     );
   }
 
-  Future<void> showInformationDialog(BuildContext context) async {
+
+
+
+
+  Future<Text> showInformationDialog(BuildContext context) async {
     return await showDialog(
         context: context,
         builder: (context) {
@@ -147,58 +150,85 @@ class _MainCompaniesState extends State<MainCompanies> {
           });
         });
   }
+
+  void searchList() {
+    TextField(
+      controller: _search,
+      decoration: InputDecoration(
+        border: InputBorder.none,
+        hintText: 'Search',
+        prefixIcon: Icon(Icons.scanner),
+      ),
+    );
+  }
+
 }
 
 class InvoicesList extends StatelessWidget {
   final String companyName;
-  static double _sum = 0; //sum for counting total invoices sum
+  double count = 0;//sum for counting total invoices sum
   InvoicesList({this.companyName});
+
+
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection("users")
-            .doc(_MainCompaniesState.user.uid)
-            .collection(companyName)
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) return new Text('Loading...');
-          else {
-            //snapshot to calculate invoices total sum
-            snapshot.data.docs.forEach((element) {
-              _sum += double.parse(element.data()['invoiceSum']);
+    return MaterialApp(
+      home: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection("users")
+              .doc(_MainCompaniesState.user.uid)
+              .collection(companyName)
+              .snapshots(),
+          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+
+            if (!snapshot.hasData) return new Text('Loading...');
+            else {
+              //Calculate Total invoice sum
+              final documents = snapshot.data.docs;
+              count = documents.fold(0, (s, n) => s + double.parse(n['invoiceSum']));
             }
+            return Scaffold(
+              bottomNavigationBar: BottomAppBar(child:Row(
+                children: [
+                  Text("Total Invoices sum: $count ₪"),
+                ],
+              ),),
+              body: ListView(
+                padding: EdgeInsets.all(5.0),
+                children: snapshot.data.docs.map((document) {
+                  return ListTile(
+                    title: Text("Date: " + document.data()['invoiceDate']),
+                    subtitle: Row(
+                      children: [
+                        Text("Sum: " + document.data()['invoiceSum']),
+                        SizedBox(width: 10.0),
+                        Text("Invoice ID: " + document.data()['invoiceID']),
+                        SizedBox(width: 10.0),
+                        //Text("Client ID: " + document.data()['clientID']),
+                      ],
+                    ),
+                    trailing: IconButton(
+                      icon: Icon(Icons.image),
+                      onPressed: () async {
+                        String url = await document.data()['invoiceUrl'];
+                        if (url != null) {
+                          await urlPhoto(context, url);
+                        }
+                      },
+                      color: Colors.orange,
+                    ),
+                    // On long press delete document from list view and database
+                    onLongPress: () {
+                      FirebaseFirestore.instance.collection('users').doc(_MainCompaniesState.user.uid).collection(companyName).doc(document.id).delete();
+                    },
+                    leading: Icon(Icons.bolt, color: Colors.yellow),
+                    horizontalTitleGap: 10.0,
+                  );
+                }).toList(),
+              ),
             );
           }
-          return ListView(
-            children: snapshot.data.docs.map((document) {
-              return ListTile(
-                title: Text("Date: " + document.data()['invoiceDate']),
-                subtitle: Row(
-                  children: [
-                    Text("Sum: " + document.data()['invoiceSum']),
-                    SizedBox(width: 10.0),
-                    Text("Invoice ID: " + document.data()['invoiceID']),
-                    SizedBox(width: 10.0),
-                    //Text("Client ID: " + document.data()['clientID']),
-                  ],
-                ),
-                trailing: IconButton(
-                  icon: Icon(Icons.image),
-                  onPressed: () async {
-                    String url = await document.data()['invoiceUrl'];
-                    if (url != null) {
-                      await urlPhoto(context, url);
-                    }
-                  },
-                  color: Colors.orange,
-                ),
-                leading: Icon(Icons.bolt, color: Colors.yellow),
-                horizontalTitleGap: 10.0,
-              );
-            }).toList(),
-          );
-        }
+      ),
     );
   }
 
@@ -219,5 +249,7 @@ class InvoicesList extends StatelessWidget {
           });
         });
   }
+
+
 
 }

@@ -7,9 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 
 
-
-
-
 class Mailer {
   String userName = 'user.name';
   String password = 'password';

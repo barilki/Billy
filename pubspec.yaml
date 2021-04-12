@@ -38,6 +38,9 @@ dependencies:
   imap_client: ^0.2.9
   url_launcher: ^6.0.3
   webview_flutter: ^2.0.4
+
+  search_app_bar: ^1.0.2+2
+
   image_picker: ^0.5.4+3
   #ocr
   tesseract_ocr: ^0.3.1
