@@ -1,19 +1,21 @@
 import 'package:billy/components/company_list.dart';
-import 'package:billy/components/constants.dart';
+import 'file:///D:/flutter_projects/building_key/lib/components/constants.dart';
+import 'package:billy/components/pie_chart_page.dart';
+import 'package:billy/components/pie_chart_sections.dart';
 import 'package:billy/ocrpage.dart';
 import 'package:billy/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:search_app_bar/search_app_bar.dart';
-
 
 class MainCompanies extends StatefulWidget {
   final String companyName;
   final String text;
   static Future<String> sharedPrefTxt = SharedPrefs.getKey('filteredTxt');
+
   MainCompanies({Key key, this.companyName, this.text}) : super(key: key);
 
   @override
@@ -25,9 +27,10 @@ class _MainCompaniesState extends State<MainCompanies> {
   final TextEditingController _search = new TextEditingController();
   final user = FirebaseAuth.instance.currentUser;
   Icon _searchIcon = new Icon(Icons.search);
-  Widget _appBarTitle = new Text( 'Search Example' );
+  Widget _appBarTitle = new Text('Search Example');
   final TextEditingController _filter = new TextEditingController();
   String searchInput = "";
+  DateTime _dateTime;
 
 
   // TextField(
@@ -45,17 +48,25 @@ class _MainCompaniesState extends State<MainCompanies> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: kBackGroundColor,
-        title: TextField(decoration: InputDecoration(
-            hintText: "Search..."),
-          onChanged: (val){
-            setState(() {
-              searchInput = val;
-            });
-          },
-        )
-        ),
-      body: company_list(companyName: widget.companyName, searchResults: searchInput),
+          backgroundColor: kBackGroundColor,
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(widget.companyName),
+              TextField(decoration: InputDecoration(
+                  hintText: "Search..."),
+                onChanged: (val) {
+                  setState(() {
+                    searchInput = val;
+                  });
+                },
+              ),
+            ],
+          )
+      ),
+      body: company_list(
+          companyName: widget.companyName, searchResults: searchInput),
       floatingActionButton: SpeedDial(
         backgroundColor: Colors.red,
         closeManually: true,
@@ -87,20 +98,38 @@ class _MainCompaniesState extends State<MainCompanies> {
               onTap: () async {
                 await showInformationDialog(context);
               }),
+          SpeedDialChild(
+              child: Icon(Icons.pie_chart),
+              backgroundColor: Colors.blue,
+              label: "Statistic",
+              onTap: () async {
+                showDatePicker(context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2222)
+                ).then((date) {
+                  setState(() {
+                    _dateTime = date;
+                  });
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              PieChartPage()));
+                });
+
+              }),
         ],
       ),
     );
   }
 
 
-
-
-
   Future<Text> showInformationDialog(BuildContext context) async {
     return await showDialog(
         context: context,
         builder: (context) {
-          String clientID, invoiceID, invoiceDate,invoiceSum;
+          String clientID, invoiceID, invoiceDate, invoiceSum;
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
               content: Form(

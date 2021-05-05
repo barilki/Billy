@@ -19,7 +19,7 @@ class company_list extends StatelessWidget {
           ? FirebaseFirestore.instance
               .collection("users")
               .doc(user.uid)
-              .collection(companyName).where("invoiceID", isEqualTo: searchResults)
+              .collection(companyName).where("invoiceID" , isEqualTo: searchResults)
               .snapshots()
         :    FirebaseFirestore.instance
               .collection("users")
@@ -66,7 +66,19 @@ class company_list extends StatelessWidget {
                     ),
                     // On long press delete document from list view and database
                     onLongPress: () {
-                      FirebaseFirestore.instance.collection('users').doc(user.uid).collection(companyName).doc(document.id).delete();
+                      showDialog(
+                        context: context,
+                        builder: (_) => CupertinoAlertDialog(
+                          content: Text('Are you sure want to delete this invoice?'),
+                          actions: [
+                            CupertinoDialogAction(child: Text('Yes'), onPressed: (){
+                              FirebaseFirestore.instance.collection('users').doc(user.uid).collection(companyName).doc(document.id).delete();
+                            }),
+                            CupertinoDialogAction(child: Text('No'), onPressed: (){
+                            }),
+                          ],
+                        ),
+                      );
                     },
                     leading: Icon(Icons.bolt, color: Colors.yellow),
                     horizontalTitleGap: 10.0,
@@ -96,6 +108,8 @@ class company_list extends StatelessWidget {
           });
         });
   }
+
+
 
 
 

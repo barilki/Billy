@@ -1,12 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
 import 'package:billy/components/icon_content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'companies/main_companies.dart';
-import 'components/reusable_icon.dart';
 import 'components/constants.dart';
-import 'package:syncfusion_flutter_pdf/pdf.dart';
+import 'components/reusable_icon.dart';
 import 'package:imap_client/imap_client.dart';
 import 'ocrpage.dart';
 
