@@ -251,6 +251,20 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_linear_datepicker:
+    dependency: "direct main"
+    description:
+      name: flutter_linear_datepicker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
+  flutter_picker:
+    dependency: "direct main"
+    description:
+      name: flutter_picker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   flutter_speed_dial:
     dependency: "direct main"
     description:
@@ -258,6 +272,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.5"
+  flutter_stream_listener:
+    dependency: "direct main"
+    description:
+      name: flutter_stream_listener
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -450,6 +471,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.5"
+  shamsi_date:
+    dependency: transitive
+    description:
+      name: shamsi_date
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.12.0"
   shared_preferences:
     dependency: "direct main"
     description:
