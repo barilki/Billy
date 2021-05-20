@@ -1,15 +1,13 @@
 import 'package:billy/components/company_list.dart';
-import 'file:///D:/flutter_projects/building_key/lib/components/constants.dart';
+import 'package:billy/components/constants.dart';
 import 'package:billy/components/pie_chart_page.dart';
-import 'package:billy/components/pie_chart_sections.dart';
-import 'package:billy/ocrpage.dart';
 import 'package:billy/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:billy/ocr/main.dart';
 
 class MainCompanies extends StatefulWidget {
   final String companyName;
@@ -77,13 +75,15 @@ class _MainCompaniesState extends State<MainCompanies> {
               backgroundColor: Colors.green,
               label: "Upload Photo",
               onTap: () async {
-                await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            OcrPage(
-                              companyName: widget.companyName,
-                            )));
+                // await Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //         builder: (context) => Root()
+                //             // OcrPage(
+                //             //   companyName: widget.companyName,
+                //             // )
+                //             ));
+                main();
               }),
           SpeedDialChild(
             child: Icon(Icons.mail),

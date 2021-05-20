@@ -25,11 +25,10 @@ dependencies:
     sdk: flutter
 
   #Add firebase
-  firebase_core: ^0.5.3
+  firebase_core: ^0.5.0+1
   firebase_auth: ^0.18.1
+  firebase_storage: ^5.2.0
   cloud_firestore: any
-    #Firebase Storage
-  firebase_storage :
   #Add fonts
   google_fonts: ^1.1.1
   #Add pdf syncfusion plugin
@@ -60,6 +59,17 @@ dependencies:
   #Chart & Graphs
   charts_flutter: ^0.10.0
   fl_chart: ^0.35.0
+
+  #Firebase ml vision
+  firebase_ml_vision: any
+
+  #Camera package
+  camera: ^0.5.8+11
+
+  #intl package
+  intl: ^0.16.1
+
+
 
 
   # The following adds the Cupertino Icons font to your application.
