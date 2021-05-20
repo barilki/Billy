@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:billy/components/company_list.dart';
 import 'package:billy/components/constants.dart';
 import 'package:billy/components/pie_chart_page.dart';
@@ -6,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_picker/Picker.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:billy/ocr/main.dart';
 
@@ -30,7 +33,6 @@ class _MainCompaniesState extends State<MainCompanies> {
   String searchInput = "";
   DateTime _dateTime;
 
-
   // TextField(
   // decoration: InputDecoration(
   // prefixIcon: Icon(Icons.search), hintText: "Search..."),
@@ -40,7 +42,6 @@ class _MainCompaniesState extends State<MainCompanies> {
   // });
   // },
   // )
-
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +53,8 @@ class _MainCompaniesState extends State<MainCompanies> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(widget.companyName),
-              TextField(decoration: InputDecoration(
-                  hintText: "Search..."),
+              TextField(
+                decoration: InputDecoration(hintText: "Search..."),
                 onChanged: (val) {
                   setState(() {
                     searchInput = val;
@@ -61,8 +62,7 @@ class _MainCompaniesState extends State<MainCompanies> {
                 },
               ),
             ],
-          )
-      ),
+          )),
       body: company_list(
           companyName: widget.companyName, searchResults: searchInput),
       floatingActionButton: SpeedDial(
@@ -75,6 +75,7 @@ class _MainCompaniesState extends State<MainCompanies> {
               backgroundColor: Colors.green,
               label: "Upload Photo",
               onTap: () async {
+<<<<<<< HEAD
                 // await Navigator.push(
                 //     context,
                 //     MaterialPageRoute(
@@ -84,6 +85,14 @@ class _MainCompaniesState extends State<MainCompanies> {
                 //             // )
                 //             ));
                 main();
+=======
+                await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => OcrPage(
+                              companyName: widget.companyName,
+                            )));
+>>>>>>> 37edb6f886d461fd8ec8f716d3d200076bc924e1
               }),
           SpeedDialChild(
             child: Icon(Icons.mail),
@@ -103,27 +112,13 @@ class _MainCompaniesState extends State<MainCompanies> {
               backgroundColor: Colors.blue,
               label: "Statistic",
               onTap: () async {
-                showDatePicker(context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2222)
-                ).then((date) {
-                  setState(() {
-                    _dateTime = date;
-                  });
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              PieChartPage()));
-                });
-
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => PieChartPage()));
               }),
         ],
       ),
     );
   }
-
 
   Future<Text> showInformationDialog(BuildContext context) async {
     return await showDialog(
@@ -143,7 +138,7 @@ class _MainCompaniesState extends State<MainCompanies> {
                           return value.isNotEmpty ? null : "Invalid Field";
                         },
                         decoration:
-                        InputDecoration(hintText: "Enter Client ID:"),
+                            InputDecoration(hintText: "Enter Client ID:"),
                       ),
                       TextFormField(
                         validator: (value) {
@@ -151,7 +146,7 @@ class _MainCompaniesState extends State<MainCompanies> {
                           return value.isNotEmpty ? null : "Invalid Field";
                         },
                         decoration:
-                        InputDecoration(hintText: "Enter Invoice ID:"),
+                            InputDecoration(hintText: "Enter Invoice ID:"),
                       ),
                       TextFormField(
                         validator: (value) {
@@ -159,7 +154,7 @@ class _MainCompaniesState extends State<MainCompanies> {
                           return value.isNotEmpty ? null : "Invalid Field";
                         },
                         decoration:
-                        InputDecoration(hintText: "Enter Invoice Date:"),
+                            InputDecoration(hintText: "Enter Invoice Date:"),
                       ),
                       TextFormField(
                         validator: (value) {
@@ -198,4 +193,3 @@ class _MainCompaniesState extends State<MainCompanies> {
 
 
 }
-

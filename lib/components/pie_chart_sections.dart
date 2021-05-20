@@ -1,8 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'pie_data.dart';
 import 'package:flutter/material.dart';
+import 'pie_chart_page.dart';
 
-List<PieChartSectionData> getSections() => PieData.data
+List<PieChartSectionData> getSections() => PieData(iec: PieChartPageState.percentIEC,water: PieChartPageState.percentWater,gas: PieChartPageState.percentGas,arnona: PieChartPageState.percentGas,cellular: PieChartPageState.percentCellular,tv: 25).data
     .asMap()
     .map<int, PieChartSectionData>((index, data) {
   final double fontSize = 16;

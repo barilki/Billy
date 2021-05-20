@@ -29,6 +29,13 @@ dependencies:
   firebase_auth: ^0.18.1
   firebase_storage: ^5.2.0
   cloud_firestore: any
+<<<<<<< HEAD
+=======
+  flutter_stream_listener: ^1.0.0
+  flutter_linear_datepicker: ^2.0.0
+  #Firebase Storage
+  firebase_storage :
+>>>>>>> 37edb6f886d461fd8ec8f716d3d200076bc924e1
   #Add fonts
   google_fonts: ^1.1.1
   #Add pdf syncfusion plugin
@@ -43,6 +50,7 @@ dependencies:
   #shared preferences
   shared_preferences: any
 
+  flutter_picker: ^2.0.1
 
   googleapis: any
   googleapis_auth: any

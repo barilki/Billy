@@ -5,7 +5,7 @@ class IndicatorsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
-    children: PieData.data
+    children: PieData().data
         .map(
           (data) => Container(
           padding: EdgeInsets.symmetric(vertical: 2),
