@@ -1,10 +1,9 @@
-
+import 'package:billy/login/register_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'components/constants.dart';
-import 'components/rounded_button.dart';
-import 'package:billy/login_page.dart';
-import 'package:billy/register_page.dart';
+import '../constants/constants.dart';
+import '../icons/rounded_button.dart';
+import 'log_page.dart';
 
 
 class AuthPage extends StatefulWidget {

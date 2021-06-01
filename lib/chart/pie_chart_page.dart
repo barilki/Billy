@@ -1,4 +1,3 @@
-import 'package:billy/components/pie_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -24,7 +23,6 @@ class PieChartPageState extends State {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getSections();
   }
 
   @override
@@ -56,10 +54,9 @@ class PieChartPageState extends State {
                         columnWidth: 100
                     ),
                   ),
-                  TextButton(onPressed: () {
+                  TextButton(onPressed: () async{
                     statCalc(selectedMonth, selectedYear);
                     setState(() {
-                      getSections();
                     });
                   }, child: Text('Search'))
                 ],
@@ -69,7 +66,7 @@ class PieChartPageState extends State {
                   PieChartData(
                     borderData: FlBorderData(show: false),
                     sectionsSpace: 0,
-                    centerSpaceRadius: 40,
+                    centerSpaceRadius: 60,
                     sections: getSections(),
                   ),
                 ),
@@ -88,21 +85,22 @@ class PieChartPageState extends State {
         ),
       );
 
-  void statCalc(String month, String year) async {
-    iecSum = await calculateSum('IEC', month, year);
-    waterSum = await calculateSum('Water company', month, year);
-    gasSum = await calculateSum('Gas company', month, year);
-    arnonaSum = await calculateSum('Arnona company', month, year);
-    cellularSum = await calculateSum('Cellular company', month, year);
-    tvSum = await calculateSum('TV company', month, year);
-    await calculatePercent();
+  // calculate invoice sum for each company
+  Future<void> statCalc(String month, String year) async {
+    total = 0.0;
+    iecSum = await calculateSum('IEC', month, year,total);
+    waterSum = await calculateSum('Water company', month, year,total);
+    gasSum = await calculateSum('Gas company', month, year,total);
+    arnonaSum = await calculateSum('Property Taxes company', month, year,total);
+    cellularSum = await calculateSum('Cellular company', month, year,total);
+    tvSum = await calculateSum('Tv company', month, year,total);
+    calculatePercent();
   }
 
-  // retrieve invoiceSum from firestore and calculate for each company
+  // retrieve invoiceSum from firestore and calculate sum for each company by month and year
   Future<double> calculateSum(
-      String companyName, String month, String year) async {
+      String companyName, String month, String year, double total) async {
     final user = FirebaseAuth.instance.currentUser;
-    total = 0.0;
     await FirebaseFirestore.instance
         .collection("users")
         .doc(user.uid)
@@ -119,6 +117,7 @@ class PieChartPageState extends State {
     return total;
   }
 
+  // calculate percent for each company by their total sum
   calculatePercent() async{
     double totalSum = iecSum + waterSum + gasSum + arnonaSum + cellularSum + tvSum;
     percentIEC = ((100 * iecSum)/totalSum).roundToDouble();
@@ -127,7 +126,6 @@ class PieChartPageState extends State {
     percentArnona = ((100 * arnonaSum)/totalSum).roundToDouble();
     percentCellular = ((100 * cellularSum)/totalSum).roundToDouble();
     percentTv = ((100 * tvSum)/totalSum).roundToDouble();
-
   }
 
 

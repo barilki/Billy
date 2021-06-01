@@ -1,30 +1,31 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'login/auth_page.dart';
+import 'camera_screen.dart';
 
 
-void main() async {
+List<CameraDescription> cameras = [];
+
+main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  try {
+    // Retrieve the device cameras
+    cameras = await availableCameras();
+  } on CameraException catch (e) {
+    print(e);
+  }
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Billy',
+      title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: AuthPage(),
+      home: CameraScreen(),
     );
   }
 }
-
-
-
-

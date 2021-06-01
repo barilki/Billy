@@ -1,12 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:billy/components/icon_content.dart';
+import 'file:///C:/Users/shay2/Billy/lib/icons/icon_content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'companies/main_companies.dart';
-import 'components/constants.dart';
-import 'components/reusable_icon.dart';
+import 'constants/constants.dart';
+import 'icons/reusable_icon.dart';
 import 'package:imap_client/imap_client.dart';
-import 'ocrpage.dart';
 
 class BillyMainPage extends StatefulWidget {
   @override
@@ -80,7 +79,7 @@ class _BillyMainPageState extends State<BillyMainPage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => MainCompanies(
-                                  companyName: 'Property Taxes company')));
+                                  companyName: 'Arnona company')));
                     },
                     colour: Colors.white,
                     cardChild: IconContent(img: 'arnona.png'),
@@ -112,26 +111,6 @@ class _BillyMainPageState extends State<BillyMainPage> {
             ),
           ],
         ),
-        bottomNavigationBar: BottomAppBar(
-          child: Row(
-            children: [
-              IconButton(
-                icon: Icon(Icons.details),
-                onPressed: () {
-                  aboutUs(context);
-                },
-              ),
-              Spacer(),
-              IconButton(
-                icon: Icon(Icons.chat),
-                onPressed: () async {
-                  await Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => OcrPage()));
-                },
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -154,25 +133,6 @@ class _BillyMainPageState extends State<BillyMainPage> {
     //print(await inbox.fetch(["BODYSTRUCTURE"], messageIds: [1]));
     // close connection
     await client.logout();
-  }
-
-
-
-  //Get url as a string and open inside alert dialog
-  Future<void> aboutUs(BuildContext context) async {
-    return await showDialog(
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(builder: (context, setState) {
-            return AlertDialog(
-              title: Row(
-                  children:[
-                    Text('Application Build by'),
-                  ]
-              ),
-            );
-          });
-        });
   }
 
 

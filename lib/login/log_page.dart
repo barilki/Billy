@@ -1,23 +1,22 @@
-import 'package:billy/login_page.dart';
+import 'package:billy/billymain_page.dart';
+import 'file:///C:/Users/shay2/Billy/lib/icons/rounded_button.dart';
+import 'package:billy/constants/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'components/constants.dart';
-import 'components/rounded_button.dart';
-import 'login_page.dart';
 
-class RegisterPage extends StatefulWidget {
+class LoginPage extends StatefulWidget {
   static const String id = 'login_screen';
 
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
-  bool showSpinner = false;
+class _LoginPageState extends State<LoginPage> {
+  bool showSpinner = true;
+
 
   String _email, _password;
   final _auth = FirebaseAuth.instance;
-  final _formKey = GlobalKey<FormState>();
 
 
   @override
@@ -25,8 +24,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: kBackGroundColor,
-      body: Form(
-        key: _formKey,
+      body: Container(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.0),
           child: Center(
@@ -38,45 +36,59 @@ class _RegisterPageState extends State<RegisterPage> {
                 SizedBox(
                   height: 48.0,
                 ),
-                TextFormField(
+                TextField(
                   textAlign: TextAlign.center,
-                  validator: emailValidator,
                   onChanged: (value) {
                     setState(() {
                       _email = value.trim();
                     });
-
                   },
                   decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your username'),
                 ),
-
                 SizedBox(
                   height: 8.0,
                 ),
-                TextFormField(
+                TextField(
                   obscureText: true,
                   textAlign: TextAlign.center,
-                  validator: pwdValidator,
                   onChanged: (value) {
                     setState(() {
                       _password = value.trim();
                     });
-
                   },
                   decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your password'),
                 ),
-                RoundedButton(
-                  title: 'Register',
+                showSpinner? RoundedButton(
+                  title: 'Log In',
                   colour: Colors.black,
                   fontColour: Colors.white,
-                  onPressed: (){
-                    if (_formKey.currentState.validate()) {
-                      _auth.createUserWithEmailAndPassword(
-                          email: _email, password: _password);
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => LoginPage()));
+                  onPressed: () async {
+                    try {
+                      setState(() {
+                        showSpinnerFlag();
+                      });
+                      await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => BillyMainPage()));
+                      setState(() {
+                        showSpinnerFlag();
+                      });
+                    } on FirebaseAuthException catch (e) {
+                      if (e.code == 'user-not-found') {
+                        print('No user found for that email.');
+                      } else if (e.code == 'wrong-password') {
+                        print('Wrong password provided for that user.');
+                      }
                     }
+
                   },
+                ): Column(
+                  children: [
+                    SizedBox(height: 15),
+                    Center(
+                      child:CircularProgressIndicator(backgroundColor: Colors.amber,),
+                    ),
+
+                  ],
                 ),
               ],
             ),
@@ -86,23 +98,9 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-
-  String emailValidator(String value) {
-    Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value)) {
-      return 'Email format is invalid, example: email@example.com';
-    } else {
-      return null;
-    }
+  //Show the spinner
+  void showSpinnerFlag(){
+    showSpinner = !showSpinner;
   }
 
-  String pwdValidator(String value) {
-    if (value.length < 6) {
-      return 'Password must be longer than 6 characters';
-    } else {
-      return null;
-    }
-  }
 }
