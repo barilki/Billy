@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:billy/chart/pie_chart_page.dart';
 import 'package:billy/companies/company_list.dart';
 import 'package:billy/constants/constants.dart';
-import 'package:billy/ocrpage.dart';
+import 'package:billy/ocr/main.dart';
 import 'package:billy/scraper/main_scraping.dart';
 import 'package:billy/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -27,59 +27,64 @@ class MainCompanies extends StatefulWidget {
 class _MainCompaniesState extends State<MainCompanies> {
   static String clientID, invoiceID, invoiceDate, invoiceSum;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _search = new TextEditingController();
   final user = FirebaseAuth.instance.currentUser;
-  final TextEditingController _filter = new TextEditingController();
   String searchInput = "";
   File _pickedImage;
   static const List<String> choices = <String>['invoiceID','invoiceSum','invoiceDate'];
   String sortBy = "invoiceID";
 
-  // TextField(
-  // decoration: InputDecoration(
-  // prefixIcon: Icon(Icons.search), hintText: "Search..."),
-  // onChanged: (val){
-  // setState(() {
-  // searchInput = val;
-  // });
-  // },
-  // )
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
           backgroundColor: kBackGroundColor,
-          title: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
+          title: Row(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            // crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 10),
+              //SizedBox(height: 10),
               Text(widget.companyName),
-              TextField(
-                decoration: InputDecoration(hintText: "Search"),
-                onChanged: (val) {
-                  setState(() {
-                    searchInput = val;
-                  });
-                },
+              SizedBox(width: 120),
+              SizedBox(
+                width: 140,
+                height: 45,
+                child: TextField(
+                  textAlign: TextAlign.center,
+                  keyboardType: TextInputType.datetime,
+                  decoration: new InputDecoration(
+                      border: new OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(10.0),
+                        ),
+                      ),
+                      filled: true,
+                      hintStyle: new TextStyle(color: Colors.grey[800]),
+                      hintText: "Search",prefixIcon: Icon(Icons.search,size: 25),
+                      fillColor: Colors.white70),
+                  onChanged: (val) {
+                    setState(() {
+                      searchInput = val;
+                    });
+                  },
+                ),
               ),
+              Flexible(
+                child: PopupMenuButton<String>(
+                  icon: Icon(Icons.filter_list),
+                  onSelected: choiceAction,
+                  itemBuilder: (BuildContext context) {
+                    return choices.map((String choice) {
+                      return PopupMenuItem<String>(
+                        value: choice,
+                        child: Text(choice),
+                      );
+                    }).toList();
+                  },
+                ),
+              )
             ],
           ),
-        actions: [
-          PopupMenuButton<String>(
-            icon: Icon(Icons.filter_list),
-            onSelected: choiceAction,
-            itemBuilder: (BuildContext context) {
-              return choices.map((String choice) {
-                return PopupMenuItem<String>(
-                  value: choice,
-                  child: Text(choice),
-                );
-              }).toList();
-            },
-          )
-        ],
       ),
       body: CompanyList(companyName: widget.companyName, searchResults: searchInput, sortBy: sortBy),
       floatingActionButton: SpeedDial(
@@ -95,9 +100,7 @@ class _MainCompaniesState extends State<MainCompanies> {
                 await Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => OcrPage(
-                              companyName: widget.companyName,
-                            )));
+                        builder: (context) => MainOcr(companyName: widget.companyName)));
               }),
           SpeedDialChild(
             child: Icon(Icons.mail),

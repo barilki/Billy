@@ -5,27 +5,61 @@ import 'camera_screen.dart';
 
 List<CameraDescription> cameras = [];
 
-main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  try {
-    // Retrieve the device cameras
-    cameras = await availableCameras();
-  } on CameraException catch (e) {
-    print(e);
-  }
-  runApp(MyApp());
+
+
+class MainOcr extends StatefulWidget {
+  final String companyName;
+  MainOcr({this.companyName});
+
+  @override
+  _MainOcrState createState() => _MainOcrState();
+
+
 }
 
-class MyApp extends StatelessWidget {
+class _MainOcrState extends State<MainOcr> {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: CameraScreen(),
+      home: CameraScreen(title: widget.companyName),
     );
   }
+
+
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    openCamera();
+  }
+
+  void openCamera() async{
+    WidgetsFlutterBinding.ensureInitialized();
+    try {
+      if(cameras != null) {
+        // Retrieve the device cameras
+        cameras = await availableCameras();
+      }
+    } on CameraException catch (e) {
+      print(e);
+    }
+    setState(() {
+
+    });
+  }
+
+
+
 }
+
+
+
+
+
+
+

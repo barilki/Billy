@@ -55,9 +55,7 @@ class PieChartPageState extends State {
                     ),
                   ),
                   TextButton(onPressed: () async{
-                    statCalc(selectedMonth, selectedYear);
-                    setState(() {
-                    });
+                    await statCalc(selectedMonth, selectedYear);
                   }, child: Text('Search'))
                 ],
               ),
@@ -95,6 +93,8 @@ class PieChartPageState extends State {
     cellularSum = await calculateSum('Cellular company', month, year,total);
     tvSum = await calculateSum('Tv company', month, year,total);
     calculatePercent();
+    setState(() {
+    });
   }
 
   // retrieve invoiceSum from firestore and calculate sum for each company by month and year

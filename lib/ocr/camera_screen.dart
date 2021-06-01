@@ -8,6 +8,8 @@ import 'main.dart';
 
 
 class CameraScreen extends StatefulWidget {
+  final String title;
+  CameraScreen({this.title});
   @override
   _CameraScreenState createState() => _CameraScreenState();
 }
@@ -82,7 +84,7 @@ class _CameraScreenState extends State<CameraScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ML Vision'),
+        title: Text(widget.title),
       ),
       body: _controller.value.isInitialized
           ? Stack(

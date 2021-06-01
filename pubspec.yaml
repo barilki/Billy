@@ -25,17 +25,13 @@ dependencies:
     sdk: flutter
 
   #Add firebase
-  firebase_core: ^0.5.0+1
+  firebase_core: ^0.5.3
   firebase_auth: ^0.18.1
-  firebase_storage: ^5.2.0
   cloud_firestore: any
-<<<<<<< HEAD
-=======
   flutter_stream_listener: ^1.0.0
   flutter_linear_datepicker: ^2.0.0
   #Firebase Storage
   firebase_storage :
->>>>>>> 37edb6f886d461fd8ec8f716d3d200076bc924e1
   #Add fonts
   google_fonts: ^1.1.1
   #Add pdf syncfusion plugin
@@ -81,12 +77,8 @@ dependencies:
   #intl package
   intl: ^0.16.1
 
-<<<<<<< HEAD
   #Web scraper
   web_scraper: ^0.0.9
-=======
-
->>>>>>> f0ac9b7a285a361780de94a08a4cd338a7c7c83a
 
 
   # The following adds the Cupertino Icons font to your application.

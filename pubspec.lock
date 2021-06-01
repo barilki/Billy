@@ -126,8 +126,7 @@ packages:
       name: crypto
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-    version: "3.0.0"
+    version: "2.1.5"
   csslib:
     dependency: transitive
     description:
@@ -135,17 +134,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.16.2"
-=======
-    version: "2.1.5"
->>>>>>> f0ac9b7a285a361780de94a08a4cd338a7c7c83a
   cupertino_icons:
     dependency: "direct main"
     description:
       name: cupertino_icons
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-    version: "1.0.2"
+    version: "1.0.3"
   dropdown_search:
     dependency: "direct main"
     description:
@@ -153,9 +148,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.1"
-=======
-    version: "1.0.3"
->>>>>>> f0ac9b7a285a361780de94a08a4cd338a7c7c83a
   encrypt:
     dependency: transitive
     description:
@@ -190,7 +182,7 @@ packages:
       name: equatable
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.2"
   event_bus:
     dependency: transitive
     description:
@@ -211,14 +203,14 @@ packages:
       name: ffi
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.1"
   file:
     dependency: transitive
     description:
       name: file
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.1.0"
+    version: "6.1.1"
   firebase_auth:
     dependency: "direct main"
     description:
@@ -267,11 +259,7 @@ packages:
       name: firebase_ml_vision
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "0.12.0+2"
-=======
-    version: "0.9.10"
->>>>>>> f0ac9b7a285a361780de94a08a4cd338a7c7c83a
   firebase_storage:
     dependency: "direct main"
     description:
@@ -662,7 +650,7 @@ packages:
       name: url_launcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.3"
+    version: "6.0.4"
   url_launcher_linux:
     dependency: transitive
     description:
@@ -725,7 +713,7 @@ packages:
       name: webview_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.4"
+    version: "2.0.8"
   win32:
     dependency: transitive
     description:
@@ -746,7 +734,7 @@ packages:
       name: xml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.1.0"
+    version: "5.1.1"
 sdks:
   dart: ">=2.12.0 <3.0.0"
-  flutter: ">=1.22.0"
+  flutter: ">=2.0.0"

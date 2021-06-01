@@ -17,6 +17,7 @@ class CompanyList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: StreamBuilder(
           stream: (searchResults != "" && searchResults != null)
               ? FirebaseFirestore.instance
