@@ -38,14 +38,15 @@ class _MainCompaniesState extends State<MainCompanies> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          backgroundColor: kBackGroundColor,
-          title: Row(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            // crossAxisAlignment: CrossAxisAlignment.start,
+      backgroundColor: kBackGroundColor,
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Text(widget.companyName,style: TextStyle(fontSize: 17.0,fontWeight: FontWeight.bold)),
+          Spacer(flex: 1,),
+          Row(
+            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              //SizedBox(height: 10),
-              Text(widget.companyName),
-              SizedBox(width: 120),
               SizedBox(
                 width: 140,
                 height: 45,
@@ -60,7 +61,8 @@ class _MainCompaniesState extends State<MainCompanies> {
                       ),
                       filled: true,
                       hintStyle: new TextStyle(color: Colors.grey[800]),
-                      hintText: "Search",prefixIcon: Icon(Icons.search,size: 25),
+                      hintText: "Search",
+                      prefixIcon: Icon(Icons.search, size: 25),
                       fillColor: Colors.white70),
                   onChanged: (val) {
                     setState(() {
@@ -69,23 +71,23 @@ class _MainCompaniesState extends State<MainCompanies> {
                   },
                 ),
               ),
-              Flexible(
-                child: PopupMenuButton<String>(
-                  icon: Icon(Icons.filter_list),
-                  onSelected: choiceAction,
-                  itemBuilder: (BuildContext context) {
-                    return choices.map((String choice) {
-                      return PopupMenuItem<String>(
-                        value: choice,
-                        child: Text(choice),
-                      );
-                    }).toList();
-                  },
-                ),
+              PopupMenuButton<String>(
+                icon: Icon(Icons.filter_list),
+                onSelected: choiceAction,
+                itemBuilder: (BuildContext context) {
+                  return choices.map((String choice) {
+                    return PopupMenuItem<String>(
+                      value: choice,
+                      child: Text(choice),
+                    );
+                  }).toList();
+                },
               )
             ],
-          ),
+          )
+        ],
       ),
+    ),
       body: CompanyList(companyName: widget.companyName, searchResults: searchInput, sortBy: sortBy),
       floatingActionButton: SpeedDial(
         backgroundColor: Colors.red,

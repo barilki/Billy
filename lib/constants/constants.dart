@@ -38,6 +38,18 @@ Text kMainLogo = Text('Billy',  style: GoogleFonts.sairaCondensed(
     ),]
 ),);
 
+Text kCompareLogo = Text('השוואת מחירים',  style: GoogleFonts.rubik(
+    fontSize: 50.0,
+    color: Colors.amber,
+    fontWeight: FontWeight.w200,
+    shadows: [ Shadow(
+      blurRadius: 7,
+      color: Colors.black.withOpacity(0.1),
+      offset: Offset(0, 5.0),
+    ),]
+),
+textDirection: TextDirection.ltr);
+
 
 
 const kSmallLogo = Text(

@@ -1,4 +1,3 @@
-
 import 'package:billy/constants/constants.dart';
 import 'package:billy/scraper/scraping.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,7 +6,7 @@ import 'package:web_scraper/web_scraper.dart';
 
 import 'companies.dart';
 
-void main() => runApp(MainScraping());
+// void main() => runApp(MainScraping());
 
 class MainScraping extends StatefulWidget {
   @override
@@ -15,21 +14,11 @@ class MainScraping extends StatefulWidget {
 }
 
 class _MainScrapingState extends State<MainScraping> {
+  //List of scraped data
   final List<Company> company = [];
 
   @override
   Widget build(BuildContext context) {
-
-    final progress = Column(
-      children: [
-        SizedBox(height: 15),
-        Center(
-          child:CircularProgressIndicator(backgroundColor: Colors.amber,),
-        )
-
-      ]
-    );
-
     return Scaffold(
       backgroundColor: Colors.lightBlue,
       appBar: AppBar(
@@ -39,7 +28,7 @@ class _MainScrapingState extends State<MainScraping> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Compare Page'),
+              Text(''),
             ],
           )),
       body: CustomScrollView(
@@ -50,8 +39,8 @@ class _MainScrapingState extends State<MainScraping> {
             padding: const EdgeInsets.symmetric(vertical: 24.0),
             sliver: new SliverList(
               delegate: new SliverChildBuilderDelegate(
-                    (context, index) {
-                        return Scraping(company[index]);
+                (context, index) {
+                  return Scraping(company[index]);
                 },
                 childCount: company.length,
               ),
@@ -62,44 +51,62 @@ class _MainScrapingState extends State<MainScraping> {
     );
   }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    scrap('hotMobile', 'hotmobile.png', 'https://www.haboreret.co.il',
+        '/הוט-מובייל/');
+    scrap('Partner', 'partner.png', 'https://www.haboreret.co.il', '/פרטנר/');
+    scrap('Pelephone', 'pelephone.png', 'https://www.haboreret.co.il',
+        '/פלאפון/');
+    scrap('Cellcom', 'Cellcom.png', 'https://www.haboreret.co.il', '/סלקום/');
+    scrap('GolanTelecom', 'GolanTelecom.png', 'https://www.haboreret.co.il',
+        '/גולן-טלקום/');
+    scrap('012', 'GolanTelecom.png', 'https://www.haboreret.co.il', '/012-2/');
 
-  scrap(String companyName, String image, String url, String path) async {
+  }
+
+  //Web data extraction function (scraping)
+  void scrap(String companyName, String image, String url, String path) async {
     final webScraper = WebScraper(url);
+    if(await webScraper.loadWebPage(path)==null){
+      print("testttt");
+    }
+
     if (await webScraper.loadWebPage(path)) {
+      print("work");
+      //Price of each plan
+      var price = webScraper.getElement('.search__p_h_2_price', ['price']);
+      //Title of each plan
+      var plan = webScraper.getElement('.__h2', ['plan']);
+      //Description of each plan
+      var aboutPlan = webScraper
+          .getElement('.search__p_h_2_tn > :nth-child(3)', ['aboutPlan']);
 
-      setState(() {
-        //Price of each plan
-        var price = webScraper.getElement('.search__p_h_2_price', ['price']);
-        //Title of each plan
-        var plan = webScraper.getElement('.__h2', ['plan']);
-        //Description of each plan
-        var aboutPlan = webScraper.getElement('.search__p_h_2_tn > :nth-child(3)', ['aboutPlan']);
 
-        print(plan);
-        for(int i=0; i<6 ; i++){
+      for (int i = 0; i < 10; i++) {
+        setState(() {
           company.add(Company(
               name: companyName,
               plan: plan[i]['title'],
               priceAddress: price[i]['title'],
               descAddress: aboutPlan[i]['title'],
               image: 'images/$image'));
-        }
-
-      });
-
-
-
+        });
+      }
     }
 
   }
-  
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    scrap('hotMobile' ,'hotmobile.png','https://www.haboreret.co.il', '/%d7%94%d7%95%d7%98-%d7%9e%d7%95%d7%91%d7%99%d7%99%d7%9c/');
+
+  Widget progress(){
+    return Column(children: [
+      SizedBox(height: 15),
+      Center(
+        child: CircularProgressIndicator(
+          backgroundColor: Colors.amber,
+        ),
+      )
+    ]);
   }
-  
 }
-
-

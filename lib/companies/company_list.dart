@@ -24,7 +24,7 @@ class CompanyList extends StatelessWidget {
                   .collection("users")
                   .doc(user.uid)
                   .collection(companyName)
-                  .where(sortBy, isEqualTo: searchResults)
+                  .where(sortBy,  isGreaterThanOrEqualTo: searchResults).where(sortBy, isLessThan: searchResults + 'z')
                   .snapshots()
               : FirebaseFirestore.instance
                   .collection("users")
@@ -35,23 +35,8 @@ class CompanyList extends StatelessWidget {
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (!snapshot.hasData)
               return new Text('Loading...');
-            else {
-              //Calculate Total invoice sum
-              final documents = snapshot.data.docs;
-              count = documents.fold(
-                  0, (s, n) => s + double.parse(n['invoiceSum']));
-            }
             return Scaffold(
               backgroundColor: kBackGroundColor,
-              bottomNavigationBar: BottomAppBar(
-                child: Row(
-                  children: [
-                    Text("Total Invoices sum: $count ₪",
-                        style: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold)),
-                  ],
-                ),
-              ),
               body: ListView(
                 padding: EdgeInsets.all(1.0),
                 children: snapshot.data.docs.map((document) {

@@ -1,5 +1,5 @@
 import 'package:billy/billymain_page.dart';
-import 'file:///C:/Users/shay2/Billy/lib/icons/rounded_button.dart';
+import 'package:billy/icons/rounded_button.dart';
 import 'package:billy/constants/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

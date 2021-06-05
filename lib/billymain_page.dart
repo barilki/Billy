@@ -1,11 +1,15 @@
+import 'package:billy/compare_page.dart';
+import 'package:billy/scraper/main_scraping.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'file:///C:/Users/shay2/Billy/lib/icons/icon_content.dart';
+import 'package:billy/icons/icon_content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'companies/main_companies.dart';
 import 'constants/constants.dart';
 import 'icons/reusable_icon.dart';
 import 'package:imap_client/imap_client.dart';
+
 
 class BillyMainPage extends StatefulWidget {
   @override
@@ -24,7 +28,7 @@ class _BillyMainPageState extends State<BillyMainPage> {
             FutureBuilder(
               future: inputData(),
               builder: (context, snapshot) {
-                if (snapshot.hasData) return Text(snapshot.data);
+                if (snapshot.hasData) return new Text(snapshot.data);
                 else if (snapshot.hasError) return Text("data error (see futurebuilder)");
                 return Text("Await for data");
               },
@@ -36,6 +40,7 @@ class _BillyMainPageState extends State<BillyMainPage> {
             ),
             Center(
               child: GridView.count(
+                crossAxisSpacing: 10,
                 shrinkWrap: true,
                 crossAxisCount: 3,
                 // crossAxisSpacing: 20.0,
@@ -108,7 +113,21 @@ class _BillyMainPageState extends State<BillyMainPage> {
                   ),
                 ],
               ),
+
             ),
+            SizedBox(height: 30),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: ReusableIcon(
+                onPress: () async {
+                  //aboutUs(context);
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ComparePage()));
+                },
+                colour: Colors.white,
+                cardChild: IconContent(img: "compare.png"),
+              ),
+            )
           ],
         ),
       ),

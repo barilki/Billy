@@ -15,9 +15,9 @@ class Scraping extends StatefulWidget {
 
 class _ScrapingState extends State<Scraping> {
 
+
   @override
   Widget build(BuildContext context) {
-
     final companyThumbnail = new Container(
       margin: new EdgeInsets.symmetric(
           vertical: 16.0
@@ -59,23 +59,24 @@ class _ScrapingState extends State<Scraping> {
 
 
     final planetCardContent = new Container(
-      margin: new EdgeInsets.fromLTRB(76.0, 16.0, 16.0, 16.0),
+      margin: new EdgeInsets.fromLTRB(86.0, 9.4, 16.0, 16.0),
       constraints: new BoxConstraints.expand(),
       child: new Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          new Container(height: 4.0),
+          // new Container(height: 2.0),
           new Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            // crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              new Text(widget.company.priceAddress, style: headerTextStyle),
-              new Container(width: 3.0),
+              new Text(widget.company.priceAddress, style: TextStyle(color: Colors.redAccent, fontSize: 17, fontWeight: FontWeight.bold), textAlign: TextAlign.left),
+              new Container(width: 10.0),
               new Text("|", style: headerTextStyle),
-              new Container(width: 3.0),
-              new Text(widget.company.plan, style: headerTextStyle, textDirection: TextDirection.rtl),
-            ],
-          ),
+              new Container(width: 20.0),
+            Flexible(child: new Text(widget.company.plan, style: headerTextStyle, textDirection: TextDirection.rtl, textAlign: TextAlign.end))
+          ]),
           new Container(height: 10.0),
-          new Text(widget.company.descAddress, style: subHeaderTextStyle, textDirection: TextDirection.rtl),
+          Flexible(child: new Text(widget.company.descAddress, style: subHeaderTextStyle, textDirection: TextDirection.rtl)),
           // new Container(
           //     margin: new EdgeInsets.symmetric(vertical: 8.0),
           //     height: 2.0,
