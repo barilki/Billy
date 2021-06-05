@@ -58,8 +58,8 @@ class _ScrapingState extends State<Scraping> {
     }
 
 
-    final planetCardContent = new Container(
-      margin: new EdgeInsets.fromLTRB(86.0, 9.4, 16.0, 16.0),
+    final planetCardContent = Container(
+      margin: new EdgeInsets.fromLTRB(86.0, 9.4, 16.0, 8.0),
       constraints: new BoxConstraints.expand(),
       child: new Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -9,6 +9,9 @@ import 'companies.dart';
 // void main() => runApp(MainScraping());
 
 class MainScraping extends StatefulWidget {
+  final String companyType;
+  MainScraping({this.companyType});
+
   @override
   _MainScrapingState createState() => _MainScrapingState();
 }
@@ -55,15 +58,26 @@ class _MainScrapingState extends State<MainScraping> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    scrap('hotMobile', 'hotmobile.png', 'https://www.haboreret.co.il',
-        '/הוט-מובייל/');
-    scrap('Partner', 'partner.png', 'https://www.haboreret.co.il', '/פרטנר/');
-    scrap('Pelephone', 'pelephone.png', 'https://www.haboreret.co.il',
-        '/פלאפון/');
-    scrap('Cellcom', 'Cellcom.png', 'https://www.haboreret.co.il', '/סלקום/');
-    scrap('GolanTelecom', 'GolanTelecom.png', 'https://www.haboreret.co.il',
-        '/גולן-טלקום/');
-    scrap('012', 'GolanTelecom.png', 'https://www.haboreret.co.il', '/012-2/');
+    if (widget.companyType == 'cellular' ) {
+      scrap('hotMobile', 'hotmobile.png', 'https://www.haboreret.co.il',
+          '/הוט-מובייל/');
+      scrap('Partner', 'partner.png', 'https://www.haboreret.co.il', '/פרטנר/');
+      scrap('Pelephone', 'pelephone.png', 'https://www.haboreret.co.il',
+          '/פלאפון/');
+      scrap('Cellcom', 'Cellcom.png', 'https://www.haboreret.co.il', '/סלקום/');
+      scrap('GolanTelecom', 'GolanTelecom.png', 'https://www.haboreret.co.il',
+          '/גולן-טלקום/');
+      scrap(
+          '012', 'GolanTelecom.png', 'https://www.haboreret.co.il', '/012-2/');
+    }
+    if(widget.companyType == 'tv'){
+      scrap('Hot', 'hot.png', 'https://www.haboreret.co.il', '/הוט/');
+      scrap('Yes', 'yes.png', 'https://www.haboreret.co.il', '/yes/');
+      scrap('Cellcom TV', 'cellcomtv.png', 'https://www.haboreret.co.il', '/סלקום-tv/');
+      scrap('Sting TV', 'stingtv.png', 'https://www.haboreret.co.il', '/סטינג-טיוי/');
+      scrap('Partner TV', 'partnertv.png', 'https://www.haboreret.co.il', '/פרטנר-tv/');
+
+    }
 
   }
 

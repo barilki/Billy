@@ -30,7 +30,7 @@ class _ComparePageState extends State<ComparePage> {
             ),
             Center(
               child: GridView.count(
-                crossAxisSpacing: 50,
+                crossAxisSpacing: 70,
                 shrinkWrap: true,
                 crossAxisCount: 2,
                 // crossAxisSpacing: 20.0,
@@ -39,7 +39,7 @@ class _ComparePageState extends State<ComparePage> {
                     onPress: () async {
                       //aboutUs(context);
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => MainScraping()));
+                          MaterialPageRoute(builder: (context) => MainScraping(companyType: 'tv')));
                     },
                     colour: Colors.white,
                     cardChild: IconContent(img: "tv.png"),
@@ -48,7 +48,7 @@ class _ComparePageState extends State<ComparePage> {
                     onPress: () async {
                       //aboutUs(context);
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => MainScraping()));
+                          MaterialPageRoute(builder: (context) => MainScraping(companyType: 'cellular',)));
                     },
                     colour: Colors.white,
                     cardChild: IconContent(img: "cellular.png"),

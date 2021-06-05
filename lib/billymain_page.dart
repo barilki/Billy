@@ -111,23 +111,20 @@ class _BillyMainPageState extends State<BillyMainPage> {
                     colour: Colors.white,
                     cardChild: IconContent(img: 'television.png'),
                   ),
+                  ReusableIcon(
+                    onPress: () async {
+                      //aboutUs(context);
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => ComparePage()));
+                    },
+                    colour: Colors.white,
+                    cardChild: IconContent(img: "compare.png"),
+                  )
                 ],
               ),
 
             ),
-            SizedBox(height: 30),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: ReusableIcon(
-                onPress: () async {
-                  //aboutUs(context);
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ComparePage()));
-                },
-                colour: Colors.white,
-                cardChild: IconContent(img: "compare.png"),
-              ),
-            )
+
           ],
         ),
       ),
