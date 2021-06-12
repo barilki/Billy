@@ -1,14 +1,11 @@
 import 'package:billy/compare_page.dart';
-import 'package:billy/scraper/main_scraping.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:billy/icons/icon_content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'companies/main_companies.dart';
 import 'constants/constants.dart';
 import 'icons/reusable_icon.dart';
-import 'package:imap_client/imap_client.dart';
 
 
 class BillyMainPage extends StatefulWidget {
@@ -124,34 +121,11 @@ class _BillyMainPageState extends State<BillyMainPage> {
               ),
 
             ),
-
           ],
         ),
       ),
     );
   }
-
-  Future<void> _main() async {
-    // print log, helpful for debugging
-    printImapClientDebugLog();
-    ImapClient client = new ImapClient();
-    // connect
-    await client.connect("imap.gmail.com", 993, true);
-    // authenticate
-    await client
-        .authenticate(ImapPlainAuth("shaymanasherov@gmail.com", "barshay123!"));
-    // get folder
-    ImapFolder inbox = await client.getFolder("Inbox");
-    // get "BODY" for message 1
-    print(await inbox.fetch(['BODY[TEXT]'],
-        messageIds: await inbox.search('shalom', uid: true)));
-    // get "BODYSTRUCTURE" for message 1
-    //print(await inbox.fetch(["BODYSTRUCTURE"], messageIds: [1]));
-    // close connection
-    await client.logout();
-  }
-
-
 
   final FirebaseAuth auth = FirebaseAuth.instance;
   Future<String> inputData() async{

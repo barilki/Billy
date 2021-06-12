@@ -19,11 +19,12 @@ class MainScraping extends StatefulWidget {
 class _MainScrapingState extends State<MainScraping> {
   //List of scraped data
   final List<Company> company = [];
+  bool isLoading = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightBlue,
+      backgroundColor: kBackGroundColor,
       appBar: AppBar(
           backgroundColor: kBackGroundColor,
           automaticallyImplyLeading: true,
@@ -31,34 +32,38 @@ class _MainScrapingState extends State<MainScraping> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(''),
+              Text(widget.companyType),
             ],
           )),
-      body: CustomScrollView(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: false,
-        slivers: <Widget>[
-          new SliverPadding(
-            padding: const EdgeInsets.symmetric(vertical: 24.0),
-            sliver: new SliverList(
-              delegate: new SliverChildBuilderDelegate(
-                (context, index) {
-                  return Scraping(company[index]);
-                },
-                childCount: company.length,
+      body: Container(
+        child: isLoading ? Center(child: CircularProgressIndicator(backgroundColor: Colors.amber,),) : Center(
+          child: CustomScrollView(
+            scrollDirection: Axis.vertical,
+            shrinkWrap: false,
+            slivers: <Widget>[
+              new SliverPadding(
+                padding: const EdgeInsets.symmetric(vertical: 24.0),
+                sliver: new SliverList(
+                  delegate: new SliverChildBuilderDelegate(
+                    (context, index) {
+                      return Scraping(company[index]);
+                    },
+                    childCount: company.length,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
-    );
+        ),
+        ),
+      );
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (widget.companyType == 'cellular' ) {
+    if (widget.companyType == 'Cellular' ) {
       scrap('hotMobile', 'hotmobile.png', 'https://www.haboreret.co.il',
           '/הוט-מובייל/');
       scrap('Partner', 'partner.png', 'https://www.haboreret.co.il', '/פרטנר/');
@@ -70,7 +75,7 @@ class _MainScrapingState extends State<MainScraping> {
       scrap(
           '012', 'GolanTelecom.png', 'https://www.haboreret.co.il', '/012-2/');
     }
-    if(widget.companyType == 'tv'){
+    if(widget.companyType == 'Tv'){
       scrap('Hot', 'hot.png', 'https://www.haboreret.co.il', '/הוט/');
       scrap('Yes', 'yes.png', 'https://www.haboreret.co.il', '/yes/');
       scrap('Cellcom TV', 'cellcomtv.png', 'https://www.haboreret.co.il', '/סלקום-tv/');
@@ -84,12 +89,9 @@ class _MainScrapingState extends State<MainScraping> {
   //Web data extraction function (scraping)
   void scrap(String companyName, String image, String url, String path) async {
     final webScraper = WebScraper(url);
-    if(await webScraper.loadWebPage(path)==null){
-      print("testttt");
-    }
 
     if (await webScraper.loadWebPage(path)) {
-      print("work");
+      isLoading = false;
       //Price of each plan
       var price = webScraper.getElement('.search__p_h_2_price', ['price']);
       //Title of each plan
@@ -97,8 +99,6 @@ class _MainScrapingState extends State<MainScraping> {
       //Description of each plan
       var aboutPlan = webScraper
           .getElement('.search__p_h_2_tn > :nth-child(3)', ['aboutPlan']);
-
-
       for (int i = 0; i < 10; i++) {
         setState(() {
           company.add(Company(
@@ -113,14 +113,4 @@ class _MainScrapingState extends State<MainScraping> {
 
   }
 
-  Widget progress(){
-    return Column(children: [
-      SizedBox(height: 15),
-      Center(
-        child: CircularProgressIndicator(
-          backgroundColor: Colors.amber,
-        ),
-      )
-    ]);
-  }
 }

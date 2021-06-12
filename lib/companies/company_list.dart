@@ -1,7 +1,9 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:billy/components/payment_page.dart';
 import 'package:billy/constants/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +26,8 @@ class CompanyList extends StatelessWidget {
                   .collection("users")
                   .doc(user.uid)
                   .collection(companyName)
-                  .where(sortBy,  isGreaterThanOrEqualTo: searchResults).where(sortBy, isLessThan: searchResults + 'z')
+                  .where(sortBy, isGreaterThanOrEqualTo: searchResults)
+                  .where(sortBy, isLessThan: searchResults + 'z')
                   .snapshots()
               : FirebaseFirestore.instance
                   .collection("users")
@@ -33,8 +36,9 @@ class CompanyList extends StatelessWidget {
                   .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData)
-              return new Text('Loading...');
+            if (!snapshot.hasData) {
+              return Text('Loading...');
+            }
             return Scaffold(
               backgroundColor: kBackGroundColor,
               body: ListView(
@@ -54,10 +58,14 @@ class CompanyList extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text("Invoice ID: " + document.data()['invoiceID'],
-                              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold)),
                           SizedBox(width: 10),
                           Text("Sum: " + document.data()['invoiceSum'],
-                              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold)),
                         ],
                       ),
                       trailing: IconButton(
@@ -75,7 +83,7 @@ class CompanyList extends StatelessWidget {
                       ),
                       // On long press delete document from list view and database
                       onLongPress: () {
-                        deleteInvoice(context,document);
+                        deleteInvoice(context, document);
                       },
                       leading: IconButton(
                         icon: Icon(Icons.image),
@@ -118,13 +126,12 @@ class CompanyList extends StatelessWidget {
   }
 
   //delete invoice from firebase
-  deleteInvoice(context,document) {
+  Future<void> deleteInvoice(BuildContext context, document) async{
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return CupertinoAlertDialog(
-          content: Text(
-              'Are you sure want to delete this invoice?'),
+          content: Text('Are you sure want to delete this invoice?'),
           actions: <Widget>[
             CupertinoDialogAction(
                 child: Row(
@@ -138,10 +145,9 @@ class CompanyList extends StatelessWidget {
                               .collection(companyName)
                               .doc(document.id)
                               .delete();
-                          // FirebaseStorage.instance
-                          //     .ref(await document
-                          //         .data()['invoiceUrl'])
-                          //     .delete();
+                          FirebaseStorage.instance
+                              .refFromURL(document.data()['invoiceUrl'])
+                              .delete();
                           Navigator.pop(context);
                         }),
                     TextButton(
@@ -156,4 +162,5 @@ class CompanyList extends StatelessWidget {
       },
     );
   }
+
 }

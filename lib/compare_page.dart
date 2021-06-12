@@ -39,7 +39,7 @@ class _ComparePageState extends State<ComparePage> {
                     onPress: () async {
                       //aboutUs(context);
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => MainScraping(companyType: 'tv')));
+                          MaterialPageRoute(builder: (context) => MainScraping(companyType: 'Tv')));
                     },
                     colour: Colors.white,
                     cardChild: IconContent(img: "tv.png"),
@@ -48,7 +48,7 @@ class _ComparePageState extends State<ComparePage> {
                     onPress: () async {
                       //aboutUs(context);
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => MainScraping(companyType: 'cellular',)));
+                          MaterialPageRoute(builder: (context) => MainScraping(companyType: 'Cellular',)));
                     },
                     colour: Colors.white,
                     cardChild: IconContent(img: "cellular.png"),
@@ -61,14 +61,6 @@ class _ComparePageState extends State<ComparePage> {
         ),
       ),
     );
-  }
-
-
-  final FirebaseAuth auth = FirebaseAuth.instance;
-  Future<String> inputData() async{
-    final User user = auth.currentUser;
-    final uid = user.email;
-    return 'Welcome ' + uid;
   }
 
 

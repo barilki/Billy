@@ -83,16 +83,13 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
       body: _controller.value.isInitialized
           ? Stack(
         children: <Widget>[
           CameraPreview(_controller),
           Center(child: Container(
-            margin: EdgeInsets.all(32.0),
-            height: MediaQuery.of(context).size.width/2,
+            margin: EdgeInsets.all(25.0),
+            height: 500,
             decoration: BoxDecoration(
                 color: Colors.transparent,
                 border: Border.all(color: Colors.white, width: 2.0),
@@ -111,7 +108,7 @@ class _CameraScreenState extends State<CameraScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => DetailScreen(path),
+                          builder: (context) => DetailScreen(imagePath: path, companyName: widget.title)
                         ),
                       );
                     }
@@ -131,3 +128,4 @@ class _CameraScreenState extends State<CameraScreen> {
     );
   }
 }
+

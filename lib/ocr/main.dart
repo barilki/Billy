@@ -1,3 +1,4 @@
+import 'package:billy/constants/constants.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'camera_screen.dart';
@@ -21,12 +22,16 @@ class _MainOcrState extends State<MainOcr> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+    return Scaffold(
+      appBar: AppBar(backgroundColor: kBackGroundColor, elevation: 0, title: Text(widget.companyName)),
+      body: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: CameraScreen(title: widget.companyName),
       ),
-      home: CameraScreen(title: widget.companyName),
     );
   }
 
@@ -52,6 +57,7 @@ class _MainOcrState extends State<MainOcr> {
 
     });
   }
+
 
 
 

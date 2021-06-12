@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -29,6 +30,8 @@ class OcrCompanies {
 
   //add current details to collection into firestore
   Future<void> insertDetails() async {
+    //log(text);
+    getSum().then((value) => print(value));
     var user = FirebaseAuth.instance.currentUser;
     var uid = user.uid;
     String invoiceID = await getID(); //get current invoice id (futrue type)
@@ -42,25 +45,26 @@ class OcrCompanies {
 
   //return sum from invoice
   Future<String> getSum() async {
-    print('hello');
-    final startIndex = await text.indexOf(startWordForSum);
-    final endIndex = await text.indexOf(endWordForSum, startIndex + startWordForSum.length);
+    final startIndex = text.indexOf(startWordForSum);
+    final endIndex = text.indexOf(endWordForSum, startIndex + startWordForSum.length);
     print(text.substring(startIndex + startWordForSum.length, endIndex));
-    return text.substring(startIndex + startWordForSum.length, endIndex);
+    //return text.substring(startIndex + startWordForSum.length, endIndex);
   }
 
   //return date from invoice
   Future<String> getDate() async {
-    final startIndex = await text.indexOf(startWordForDate);
-    final endIndex = await text.indexOf(endWordForDate, startIndex + startWordForDate.length);
-    return text.substring(startIndex + startWordForDate.length, endIndex);
+    final startIndex = text.indexOf(startWordForDate);
+    final endIndex = text.indexOf(endWordForDate, startIndex + startWordForDate.length);
+    print(text.substring(startIndex + startWordForDate.length, endIndex));
+    //return text.substring(startIndex + startWordForDate.length, endIndex);
   }
 
   //return id from invoice
   Future<String> getID() async {
-    final startIndex = await text.indexOf(startWordForID);
-    final endIndex = await text.indexOf(endWordForID, startIndex + startWordForID.length);
-    return text.substring(startIndex + startWordForID.length, endIndex);
+    final startIndex = text.indexOf(startWordForID);
+    final endIndex = text.indexOf(endWordForID, startIndex + startWordForID.length);
+    print(text.substring(startIndex + startWordForID.length, endIndex));
+    //return text.substring(startIndex + startWordForID.length, endIndex);
   }
 
 
