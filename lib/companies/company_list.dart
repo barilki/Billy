@@ -23,17 +23,17 @@ class CompanyList extends StatelessWidget {
       home: StreamBuilder(
           stream: (searchResults != "" && searchResults != null)
               ? FirebaseFirestore.instance
-                  .collection("users")
-                  .doc(user.uid)
-                  .collection(companyName)
-                  .where(sortBy, isGreaterThanOrEqualTo: searchResults)
-                  .where(sortBy, isLessThan: searchResults + 'z')
-                  .snapshots()
+              .collection("users")
+              .doc(user.uid)
+              .collection(companyName)
+              .where(sortBy, isGreaterThanOrEqualTo: searchResults)
+              .where(sortBy, isLessThan: searchResults + 'z')
+              .snapshots()
               : FirebaseFirestore.instance
-                  .collection("users")
-                  .doc(user.uid)
-                  .collection(companyName)
-                  .snapshots(),
+              .collection("users")
+              .doc(user.uid)
+              .collection(companyName)
+              .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (!snapshot.hasData) {
@@ -74,10 +74,11 @@ class CompanyList extends StatelessWidget {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => PaymentPage(
-                                      companyName,
-                                      document.data()['invoiceID'],
-                                      document.data()['invoiceSum'])));
+                                  builder: (context) =>
+                                      PaymentPage(
+                                          companyName,
+                                          document.data()['invoiceID'],
+                                          document.data()['invoiceSum'])));
                         },
                         color: Colors.green,
                       ),
@@ -126,7 +127,7 @@ class CompanyList extends StatelessWidget {
   }
 
   //delete invoice from firebase
-  Future<void> deleteInvoice(BuildContext context, document) async{
+  Future<void> deleteInvoice(BuildContext context, document) async {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -162,5 +163,5 @@ class CompanyList extends StatelessWidget {
       },
     );
   }
-
 }
+

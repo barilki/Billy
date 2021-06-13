@@ -1,3 +1,5 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
+
 import 'log_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -71,11 +73,16 @@ class _RegisterPageState extends State<RegisterPage> {
                   fontColour: Colors.white,
                   onPressed: (){
                     if (_formKey.currentState.validate()) {
-                      _auth.createUserWithEmailAndPassword(
-                          email: _email, password: _password);
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => LoginPage()));
-                    }
+                        _auth.createUserWithEmailAndPassword(
+                            email: _email, password: _password).then((user) {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) =>
+                                  LoginPage()));
+                        }).catchError((e) {
+                          existUser(context);
+                        });
+
+                      }
                   },
                 ),
               ],
@@ -105,4 +112,21 @@ class _RegisterPageState extends State<RegisterPage> {
       return null;
     }
   }
+
+  existUser(BuildContext context) {
+    return AwesomeDialog(
+      context: context,
+      dialogType: DialogType.WARNING,
+      borderSide: BorderSide(color: Colors.red, width: 3),
+      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
+      headerAnimationLoop: true,
+      animType: AnimType.BOTTOMSLIDE,
+      title: 'WARNING!',
+      desc: 'The email address is already in use by another account',
+      showCloseIcon: true,
+      //btnCancelOnPress: () {},
+      //btnOkOnPress: () {},
+    )..show();
+  }
+
 }
