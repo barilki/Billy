@@ -36,3 +36,19 @@ warningAlerts(BuildContext context,String msg) {
     //btnOkOnPress: () {},
   )..show();
 }
+
+successAlert(BuildContext context,String msg) {
+  return AwesomeDialog(
+    context: context,
+    dialogType: DialogType.SUCCES,
+    borderSide: BorderSide(color: Colors.green, width: 3),
+    buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
+    headerAnimationLoop: true,
+    animType: AnimType.BOTTOMSLIDE,
+    title: 'Success!',
+    desc: msg,
+    showCloseIcon: true,
+    //btnCancelOnPress: () {},
+    //btnOkOnPress: () {},
+  )..show();
+}

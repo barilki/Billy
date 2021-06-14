@@ -24,7 +24,7 @@ class MainCompanies extends StatefulWidget {
 }
 
 class _MainCompaniesState extends State<MainCompanies> {
-  static String clientID, invoiceID, invoiceDate, invoiceSum;
+  static String clientID, invoiceID, invoiceDate, invoiceSum, invoiceDueDate;
   String companyName;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final user = FirebaseAuth.instance.currentUser;
@@ -33,7 +33,8 @@ class _MainCompaniesState extends State<MainCompanies> {
   static const List<String> choices = <String>[
     'invoiceID',
     'invoiceSum',
-    'invoiceDate'
+    'invoiceDate',
+    'invoiceDueDate'
   ];
   String sortBy = "invoiceID";
 
@@ -154,6 +155,7 @@ class _MainCompaniesState extends State<MainCompanies> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextFormField(
+                        maxLength: 9,
                         validator: (value) {
                           clientID = value;
                           return value.isNotEmpty ? null : "Invalid Field";
@@ -163,6 +165,7 @@ class _MainCompaniesState extends State<MainCompanies> {
                         keyboardType: TextInputType.number,
                       ),
                       TextFormField(
+                        maxLength: 9,
                         validator: (value) {
                           invoiceID = value;
                           return value.isNotEmpty ? null : "Invalid Field";
@@ -173,8 +176,8 @@ class _MainCompaniesState extends State<MainCompanies> {
                       ),
                       TextFormField(
                         validator: (value) {
-                          String a = '((0[1-9])|([1-2][0-9])|(3[0-1]))/((0[1-9])|(1[0-2]))/[0-9]{4}';
-                          RegExp regExp = RegExp(a);
+                          String regForDate = '((0[1-9])|([1-2][0-9])|(3[0-1]))/((0[1-9])|(1[0-2]))/[0-9]{4}';
+                          RegExp regExp = RegExp(regForDate);
                           invoiceDate = value;
                           return regExp.hasMatch(value)
                               ? null
@@ -186,6 +189,21 @@ class _MainCompaniesState extends State<MainCompanies> {
                         keyboardType: TextInputType.datetime,
                       ),
                       TextFormField(
+                        validator: (value) {
+                          String regForDate = '((0[1-9])|([1-2][0-9])|(3[0-1]))/((0[1-9])|(1[0-2]))/[0-9]{4}';
+                          RegExp regExp = RegExp(regForDate);
+                          invoiceDueDate = value;
+                          return regExp.hasMatch(value)
+                              ? null
+                              : "Invalid Field";
+                        },
+                        decoration:
+                        InputDecoration(
+                            hintText: "Enter Invoice Due Date: (dd/mm/yy)"),
+                        keyboardType: TextInputType.datetime,
+                      ),
+                      TextFormField(
+                        maxLength: 5,
                         validator: (value) {
                           invoiceSum = value;
                           return value.isNotEmpty ? null : "Invalid Field";
@@ -235,6 +253,7 @@ class _MainCompaniesState extends State<MainCompanies> {
                                 "clientID": clientID,
                                 "invoiceID": invoiceID,
                                 "invoiceDate": invoiceDate,
+                                "invoiceDueDate": invoiceDueDate,
                                 "invoiceSum": invoiceSum,
                                 "invoiceUrl": await photoStorage(),
                               });
@@ -289,6 +308,8 @@ void choiceAction(String choice) {
     sortBy = 'invoiceID';
   } else if (choice == 'invoiceDate') {
     sortBy = 'invoiceDate';
+  } else if (choice == 'invoiceDueDate') {
+    sortBy = 'invoiceDueDate';
   } else if (choice == 'invoiceSum') {
     sortBy = 'invoiceSum';
   }

@@ -12,6 +12,8 @@ class OcrCompanies {
   final String endWordForSum;
   final String startWordForDate;
   final String endWordForDate;
+  final String startWordForDueDate;
+  final String endWordForDueDate;
   final String startWordForID;
   final String endWordForID;
 
@@ -23,6 +25,8 @@ class OcrCompanies {
     @required this.endWordForSum,
     @required this.startWordForDate,
     @required this.endWordForDate,
+    @required this.startWordForDueDate,
+    @required this.endWordForDueDate,
     @required this.startWordForID,
     @required this.endWordForID,
   });
@@ -37,7 +41,7 @@ class OcrCompanies {
     storageRef.putFile(pickedImage); //Upload photo to firebase storage
     String url = await (storageRef.getDownloadURL());
     final CollectionReference vaultCollection = FirebaseFirestore.instance.collection('users').doc(uid).collection(companyName);
-    vaultCollection.add({"invoiceDate": await getDate(), "invoiceID": await getID(), "invoiceSum": await getSum(), "invoiceUrl": url});
+    vaultCollection.add({"invoiceDate": await getDate(), "invoiceDueDate": await getDueDate(), "invoiceID": await getID(), "invoiceSum": await getSum(), "invoiceUrl": url});
   }
 
   //return sum from invoice
@@ -51,6 +55,13 @@ class OcrCompanies {
 
   //return date from invoice
   Future<String> getDate() async {
+    final startIndex = await text.indexOf(startWordForDate);
+    final endIndex = await text.indexOf(endWordForDate, startIndex + startWordForDate.length);
+    return text.substring(startIndex + startWordForDate.length, endIndex);
+  }
+
+  //return duevdate from invoice
+  Future<String> getDueDate() async {
     final startIndex = await text.indexOf(startWordForDate);
     final endIndex = await text.indexOf(endWordForDate, startIndex + startWordForDate.length);
     return text.substring(startIndex + startWordForDate.length, endIndex);

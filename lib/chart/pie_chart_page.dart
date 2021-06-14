@@ -51,8 +51,7 @@ class PieChartPageState extends State {
                   Padding(
                     padding: const EdgeInsets.all(16),
                     child: LinearDatePicker(
-                        startDate: "2000/01/01",
-                        //yyyy/mm/dd
+                        startDate: "2000/01/01", //yyyy/mm/dd
                         endDate: "2050/12/31",
                         initialDate: "2021/11/15",
                         dateChangeListener: (String selectedDate) {

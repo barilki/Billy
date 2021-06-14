@@ -79,6 +79,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) =>
                                   LoginPage()));
+                          successAlert(context, 'Registered successfully.');
                         }).catchError((e) {
                           warningAlerts(context, 'The email address is already in use by another account');
                         });

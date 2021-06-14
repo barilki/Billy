@@ -40,6 +40,7 @@ class CompanyList extends StatelessWidget {
               return Text('Loading...');
             }
             return Scaffold(
+              resizeToAvoidBottomInset: false,
               backgroundColor: kBackGroundColor,
               body: ListView(
                 padding: EdgeInsets.all(1.0),
@@ -50,10 +51,19 @@ class CompanyList extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15.0),
                     ),
                     child: ListTile(
-                      title: Text("Date: " + document.data()['invoiceDate'],
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold)),
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Date: " + document.data()['invoiceDate'],
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold)),
+                          Text("Due Date: " + document.data()['invoiceDueDate'],
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold)),
+                        ],
+                      ),
                       subtitle: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -64,27 +74,26 @@ class CompanyList extends StatelessWidget {
                           SizedBox(width: 10),
                           Text("Sum: " + document.data()['invoiceSum'],
                               style: TextStyle(
-                                  color: Colors.red,
+                                  color: Colors.green,
                                   fontWeight: FontWeight.bold)),
                         ],
                       ),
+                      // On press delete button, delete document from list view and database
                       trailing: IconButton(
-                        icon: Icon(Icons.payment),
+                        icon: Icon(Icons.delete),
                         onPressed: () async {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      PaymentPage(
-                                          companyName,
-                                          document.data()['invoiceID'],
-                                          document.data()['invoiceSum'])));
+                          deleteInvoice(context, document);
                         },
-                        color: Colors.green,
+                        color: Colors.red,
                       ),
-                      // On long press delete document from list view and database
-                      onLongPress: () {
-                        deleteInvoice(context, document);
+                      // On long press navigate to payment page
+                      onLongPress: () async{
+                        await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    PaymentPage(
+                                        companyName)));
                       },
                       leading: IconButton(
                         icon: Icon(Icons.image),
@@ -140,7 +149,8 @@ class CompanyList extends StatelessWidget {
                     TextButton(
                         child: Text('Yes'),
                         onPressed: () async {
-                          FirebaseFirestore.instance
+                          Navigator.pop(context);
+                          await FirebaseFirestore.instance
                               .collection('users')
                               .doc(user.uid)
                               .collection(companyName)
@@ -149,7 +159,6 @@ class CompanyList extends StatelessWidget {
                           FirebaseStorage.instance
                               .refFromURL(document.data()['invoiceUrl'])
                               .delete();
-                          Navigator.pop(context);
                         }),
                     TextButton(
                         child: Text('No'),
