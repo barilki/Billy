@@ -75,15 +75,17 @@ class _DetailScreenState extends State<DetailScreen> {
             recognizedText = visionText.text;
           });
         }
-    log(recognizedText);
-    getDetails();
+    //log(recognizedText);
+    //getDetails();
+    await strReg(recognizedText);
     }
 
   //Regex getting string
   strReg(String str) async {
     String newStr = str.replaceAll(RegExp('[a-zA-Z!-,:-@[-`{-~]'), '');
-    await SharedPrefs.setKey('filteredTxt', newStr);
-    getDetails();
+    log(newStr);
+    //await SharedPrefs.setKey('filteredTxt', newStr);
+    //getDetails();
   }
 
   //Retrieving information according to the company required

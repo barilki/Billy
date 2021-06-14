@@ -36,7 +36,7 @@ class _MainScrapingState extends State<MainScraping> {
             ],
           )),
       body: Container(
-        child: isLoading ? Center(child: CircularProgressIndicator(backgroundColor: Colors.amber,),) : Center(
+        child: isLoading ? Center(child: CircularProgressIndicator(),) : Center(
           child: CustomScrollView(
             scrollDirection: Axis.vertical,
             shrinkWrap: false,

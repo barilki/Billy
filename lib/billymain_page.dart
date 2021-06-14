@@ -16,8 +16,7 @@ class BillyMainPage extends StatefulWidget {
 class _BillyMainPageState extends State<BillyMainPage> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
         backgroundColor: kBackGroundColor,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -123,7 +122,6 @@ class _BillyMainPageState extends State<BillyMainPage> {
             ),
           ],
         ),
-      ),
     );
   }
 
