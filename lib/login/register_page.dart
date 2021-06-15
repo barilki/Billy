@@ -17,8 +17,7 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   bool showSpinner = false;
-
-  String _email, _password;
+  String _email, _password, _user;
   final _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
 
@@ -42,15 +41,29 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: 48.0,
                 ),
                 TextFormField(
+                    textAlign: TextAlign.center,
+                    validator: userNameValidator,
+                    onChanged: (value) {
+                      setState(() {
+                        _user = value.trim();
+                      });
+
+                    },
+                    decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your username',prefixIcon: Icon(Icons.account_circle_sharp, color: Colors.white),)
+                ),
+
+                SizedBox(
+                  height: 8.0,
+                ),
+                TextFormField(
                   textAlign: TextAlign.center,
                   validator: emailValidator,
                   onChanged: (value) {
                     setState(() {
                       _email = value.trim();
                     });
-
                   },
-                  decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your username'),
+                  decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your email address',prefixIcon: Icon(Icons.email, color: Colors.white),)
                 ),
 
                 SizedBox(
@@ -64,9 +77,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     setState(() {
                       _password = value.trim();
                     });
-
                   },
-                  decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your password'),
+                  decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your password',prefixIcon: Icon(Icons.lock, color: Colors.white),)
                 ),
                 RoundedButton(
                   title: 'Register',
@@ -75,7 +87,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   onPressed: (){
                     if (_formKey.currentState.validate()) {
                         _auth.createUserWithEmailAndPassword(
-                            email: _email, password: _password).then((user) {
+                            email: _email, password: _password).then((res) {
+                              _auth.currentUser.updateProfile(displayName: _user);
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) =>
                                   LoginPage()));
@@ -83,7 +96,6 @@ class _RegisterPageState extends State<RegisterPage> {
                         }).catchError((e) {
                           warningAlerts(context, 'The email address is already in use by another account');
                         });
-
                       }
                   },
                 ),

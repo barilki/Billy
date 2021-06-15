@@ -21,6 +21,16 @@ String pwdValidator(String value) {
   }
 }
 
+String userNameValidator(String value) {
+  if (value.length > 15) {
+    return 'Username must be shorter than 15 characters';
+  } if (value.length < 2) {
+    return 'Username must be longer than 2 characters';
+  } else {
+    return null;
+  }
+}
+
 warningAlerts(BuildContext context,String msg) {
   return AwesomeDialog(
     context: context,

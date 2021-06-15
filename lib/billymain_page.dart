@@ -14,6 +14,7 @@ class BillyMainPage extends StatefulWidget {
 }
 
 class _BillyMainPageState extends State<BillyMainPage> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,11 +126,9 @@ class _BillyMainPageState extends State<BillyMainPage> {
     );
   }
 
-  final FirebaseAuth auth = FirebaseAuth.instance;
+
   Future<String> inputData() async{
-    final User user = auth.currentUser;
-    final uid = user.email;
-    return 'Welcome ' + uid;
+    return 'Welcome ' + auth.currentUser.displayName;
   }
 
 

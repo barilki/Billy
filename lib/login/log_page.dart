@@ -45,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
                       _email = value.trim();
                     });
                   },
-                  decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your username'),
+                  decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your email address',prefixIcon: Icon(Icons.email,color : Colors.white)),
                 ),
                 SizedBox(
                   height: 8.0,
@@ -59,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
                       _password = value.trim();
                     });
                   },
-                  decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your password'),
+                  decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your password',prefixIcon: Icon(Icons.lock, color: Colors.white),)
                 ),
                 showSpinner? RoundedButton(
                   title: 'Log In',

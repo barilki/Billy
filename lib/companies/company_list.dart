@@ -23,17 +23,17 @@ class CompanyList extends StatelessWidget {
       home: StreamBuilder(
           stream: (searchResults != "" && searchResults != null)
               ? FirebaseFirestore.instance
-              .collection("users")
-              .doc(user.uid)
-              .collection(companyName)
-              .where(sortBy, isGreaterThanOrEqualTo: searchResults)
-              .where(sortBy, isLessThan: searchResults + 'z')
-              .snapshots()
+                  .collection("users")
+                  .doc(user.uid)
+                  .collection(companyName)
+                  .where(sortBy, isGreaterThanOrEqualTo: searchResults)
+                  .where(sortBy, isLessThan: searchResults + 'z')
+                  .snapshots()
               : FirebaseFirestore.instance
-              .collection("users")
-              .doc(user.uid)
-              .collection(companyName)
-              .snapshots(),
+                  .collection("users")
+                  .doc(user.uid)
+                  .collection(companyName)
+                  .snapshots(),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (!snapshot.hasData) {
@@ -87,13 +87,12 @@ class CompanyList extends StatelessWidget {
                         color: Colors.red,
                       ),
                       // On long press navigate to payment page
-                      onLongPress: () async{
+                      onLongPress: () async {
                         await Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    PaymentPage(
-                                        companyName)));
+                                    PaymentPage(companyName)));
                       },
                       leading: IconButton(
                         icon: Icon(Icons.image),
@@ -117,23 +116,57 @@ class CompanyList extends StatelessWidget {
 
   //Get url as a string and open inside alert dialog
   Future<void> urlPhoto(BuildContext context, String url) async {
-    return await showDialog(
+    showGeneralDialog(
         context: context,
-        builder: (context) {
-          return StatefulBuilder(builder: (context, setState) {
-            return AlertDialog(
-              title: Row(children: [
-                Image.network(
-                  url,
-                  width: 250,
-                  height: 250,
-                  fit: BoxFit.contain,
-                ),
-              ]),
-            );
-          });
+        barrierDismissible: true,
+        barrierLabel: MaterialLocalizations.of(context)
+            .modalBarrierDismissLabel,
+        barrierColor: Colors.black45,
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (BuildContext buildContext,
+            Animation animation,
+            Animation secondaryAnimation) {
+          return Center(
+            child: Container(
+              width: MediaQuery.of(context).size.width - 10,
+              height: MediaQuery.of(context).size.height -  80,
+              padding: EdgeInsets.all(20),
+              color: Colors.white,
+              child: Column(
+                children: [
+                  Image.network(url,height: 700, width: 700,fit: BoxFit.fill,),
+                ],
+              ),
+            ),
+          );
         });
   }
+
+  //   return await showDialog(
+  //       context: context,
+  //       builder: (context) {
+  //         return StatefulBuilder(builder: (context, setState) {
+  //           return AlertDialog(
+  //             //insetPadding: EdgeInsets.symmetric(horizontal: 10),
+  //             contentPadding: EdgeInsets.all(5.0),
+  //             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+  //             actions: [
+  //               Column(
+  //
+  //                 children: [
+  //                   Image.network(
+  //                     url,
+  //                     width: 250,
+  //                     height: 250,
+  //                     fit: BoxFit.fill,
+  //                   ),
+  //                 ],
+  //               )
+  //             ],
+  //           );
+  //         });
+  //       });
+  // }
 
   //delete invoice from firebase
   Future<void> deleteInvoice(BuildContext context, document) async {
@@ -145,32 +178,31 @@ class CompanyList extends StatelessWidget {
           actions: <Widget>[
             CupertinoDialogAction(
                 child: Row(
-                  children: [
-                    TextButton(
-                        child: Text('Yes'),
-                        onPressed: () async {
-                          Navigator.pop(context);
-                          await FirebaseFirestore.instance
-                              .collection('users')
-                              .doc(user.uid)
-                              .collection(companyName)
-                              .doc(document.id)
-                              .delete();
-                          FirebaseStorage.instance
-                              .refFromURL(document.data()['invoiceUrl'])
-                              .delete();
-                        }),
-                    TextButton(
-                        child: Text('No'),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        }),
-                  ],
-                ))
+              children: [
+                TextButton(
+                    child: Text('Yes'),
+                    onPressed: () async {
+                      Navigator.pop(context);
+                      await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(user.uid)
+                          .collection(companyName)
+                          .doc(document.id)
+                          .delete();
+                      FirebaseStorage.instance
+                          .refFromURL(document.data()['invoiceUrl'])
+                          .delete();
+                    }),
+                TextButton(
+                    child: Text('No'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    }),
+              ],
+            ))
           ],
         );
       },
     );
   }
 }
-
