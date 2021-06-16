@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:billy/compare_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:billy/icons/icon_content.dart';
@@ -6,15 +8,20 @@ import 'package:flutter/material.dart';
 import 'companies/main_companies.dart';
 import 'constants/constants.dart';
 import 'icons/reusable_icon.dart';
+import 'login/log_page.dart';
 
 
 class BillyMainPage extends StatefulWidget {
   @override
   _BillyMainPageState createState() => _BillyMainPageState();
+
 }
+
 
 class _BillyMainPageState extends State<BillyMainPage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,13 +30,13 @@ class _BillyMainPageState extends State<BillyMainPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FutureBuilder(
-              future: inputData(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) return new Text(snapshot.data);
-                else if (snapshot.hasError) return Text("data error (see futurebuilder)");
-                return Text("Await for data");
+                else if (snapshot.hasError) return Text("");
+                return Text("");
               },
             ),
+            Text(('שלום ' + auth.currentUser.displayName),textDirection: TextDirection.rtl,),
             kMainLogo,
             kSmallLogo,
             SizedBox(
@@ -98,7 +105,7 @@ class _BillyMainPageState extends State<BillyMainPage> {
                     cardChild: IconContent(img: 'smartphone.png'),
                   ),
                   ReusableIcon(
-                    onPress: () {
+                    onPress: () async{
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -121,15 +128,17 @@ class _BillyMainPageState extends State<BillyMainPage> {
               ),
 
             ),
+            TextButton(onPressed: () async{
+              await FirebaseAuth.instance.signOut();
+              Navigator.push(context, MaterialPageRoute(builder: (
+                  context) => LoginPage()));
+            }, child: Text('התנתק'))
           ],
         ),
     );
   }
 
 
-  Future<String> inputData() async{
-    return 'Welcome ' + auth.currentUser.displayName;
-  }
 
 
 }

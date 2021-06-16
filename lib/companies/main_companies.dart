@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:billy/chart/pie_chart_page.dart';
 import 'package:billy/companies/company_list.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 
 class MainCompanies extends StatefulWidget {
@@ -31,10 +33,10 @@ class _MainCompaniesState extends State<MainCompanies> {
   String searchInput = "";
   File _pickedImage;
   static const List<String> choices = <String>[
-    'invoiceID',
-    'invoiceSum',
-    'invoiceDate',
-    'invoiceDueDate'
+    'מספר חשבונית',
+    'סכום',
+    'תאריך',
+    'תאריך פירעון'
   ];
   String sortBy = "invoiceID";
 
@@ -67,7 +69,7 @@ class _MainCompaniesState extends State<MainCompanies> {
                         ),
                         filled: true,
                         hintStyle: new TextStyle(color: Colors.grey[800]),
-                        hintText: "Search",
+                        hintText: "חיפוש",
                         prefixIcon: Icon(Icons.search, size: 25),
                         fillColor: Colors.white70),
                     onChanged: (val) {
@@ -106,7 +108,7 @@ class _MainCompaniesState extends State<MainCompanies> {
           SpeedDialChild(
             child: Icon(Icons.camera),
             backgroundColor: Colors.green,
-            label: "Upload Photo",
+            label: "העלאת תמונה",
             onTap: () async {
               await Navigator.push(
                   context,
@@ -118,14 +120,14 @@ class _MainCompaniesState extends State<MainCompanies> {
           SpeedDialChild(
               child: Icon(Icons.assignment_rounded),
               backgroundColor: Colors.black,
-              label: "Manually Add",
+              label: "הוספה ידנית",
               onTap: () async {
                 await showInformationDialog(context);
               }),
           SpeedDialChild(
               child: Icon(Icons.pie_chart),
               backgroundColor: Colors.blue,
-              label: "Statistic",
+              label: "סטטיסטיקה",
               onTap: () async {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => PieChartPage()));
@@ -133,7 +135,7 @@ class _MainCompaniesState extends State<MainCompanies> {
           SpeedDialChild(
               child: Icon(Icons.details),
               backgroundColor: Colors.blueGrey,
-              label: "About Us",
+              label: "עלינו",
               onTap: () async {
                 aboutUs(context);
               }),
@@ -158,21 +160,23 @@ class _MainCompaniesState extends State<MainCompanies> {
                         maxLength: 9,
                         validator: (value) {
                           clientID = value;
-                          return value.isNotEmpty ? null : "Invalid Field";
+                          return value.isNotEmpty ? null : "שדה שגוי";
                         },
                         decoration:
-                        InputDecoration(hintText: "Enter Client ID:"),
+                        InputDecoration(hintText: " :מספר לקוח"),
                         keyboardType: TextInputType.number,
+                        textAlign: TextAlign.right,
                       ),
                       TextFormField(
                         maxLength: 9,
                         validator: (value) {
                           invoiceID = value;
-                          return value.isNotEmpty ? null : "Invalid Field";
+                          return value.isNotEmpty ? null : "שדה שגוי";
                         },
                         decoration:
-                        InputDecoration(hintText: "Enter Invoice ID:"),
+                        InputDecoration(hintText: " :מספר חשבונית"),
                         keyboardType: TextInputType.number,
+                        textAlign: TextAlign.right,
                       ),
                       TextFormField(
                         validator: (value) {
@@ -181,12 +185,12 @@ class _MainCompaniesState extends State<MainCompanies> {
                           invoiceDate = value;
                           return regExp.hasMatch(value)
                               ? null
-                              : "Invalid Field";
+                              : "שדה שגוי";
                         },
                         decoration:
                         InputDecoration(
-                            hintText: "Enter Invoice Date: (dd/mm/yy)"),
-                        keyboardType: TextInputType.datetime,
+                            hintText: "(dd/mm/yyyy) :תאריך"),
+                        textAlign: TextAlign.right,
                       ),
                       TextFormField(
                         validator: (value) {
@@ -195,22 +199,23 @@ class _MainCompaniesState extends State<MainCompanies> {
                           invoiceDueDate = value;
                           return regExp.hasMatch(value)
                               ? null
-                              : "Invalid Field";
+                              : "שדה שגוי";
                         },
                         decoration:
                         InputDecoration(
-                            hintText: "Enter Invoice Due Date: (dd/mm/yy)"),
-                        keyboardType: TextInputType.datetime,
+                            hintText: "(dd/mm/yyyy) :תאריך פירעון"),
+                        textAlign: TextAlign.right,
                       ),
                       TextFormField(
                         maxLength: 5,
                         validator: (value) {
                           invoiceSum = value;
-                          return value.isNotEmpty ? null : "Invalid Field";
+                          return value.isNotEmpty ? null : "שדה שגוי";
                         },
                         decoration: InputDecoration(
-                            hintText: "Enter Invoice Total Sum:"),
+                            hintText: " :סכום"),
                         keyboardType: TextInputType.number,
+                        textAlign: TextAlign.right,
                       ),
                     ],
                   )),
@@ -236,13 +241,13 @@ class _MainCompaniesState extends State<MainCompanies> {
                     Row(
                       children: [
                         TextButton(
-                          child: Text('Cancel'),
+                          child: Text('ביטול'),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
                         ),
                         TextButton(
-                          child: Text('Done'),
+                          child: Text('בוצע'),
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {
                               await FirebaseFirestore.instance
@@ -280,8 +285,8 @@ class _MainCompaniesState extends State<MainCompanies> {
       buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
       headerAnimationLoop: false,
       animType: AnimType.BOTTOMSLIDE,
-      title: 'AboutUS',
-      desc: 'Application build by Shay Manasherov & Bar ilan Kimbarovski, contact us via mail: billy@gmail.com',
+      title: 'עלינו',
+      desc: 'האפליקציה נוצרה ע"י שי מנשרוב ובר אילן קימברובסקי, לפרטים נוספים ניתן לפנות אלינו בדואר אלקטרוני: billy@gmail.com',
       showCloseIcon: true,
       //btnCancelOnPress: () {},
       btnOkOnPress: () {},
@@ -304,13 +309,13 @@ photoStorage() async {
 
 // get user choice from filter list
 void choiceAction(String choice) {
-  if (choice == 'invoiceID') {
+  if (choice == 'מספר חשבונית') {
     sortBy = 'invoiceID';
-  } else if (choice == 'invoiceDate') {
+  } else if (choice == 'תאריך') {
     sortBy = 'invoiceDate';
-  } else if (choice == 'invoiceDueDate') {
+  } else if (choice == 'תאריך פירעון') {
     sortBy = 'invoiceDueDate';
-  } else if (choice == 'invoiceSum') {
+  } else if (choice == 'סכום') {
     sortBy = 'invoiceSum';
   }
 }

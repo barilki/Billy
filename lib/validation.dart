@@ -7,7 +7,7 @@ String emailValidator(String value) {
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
   RegExp regex = new RegExp(pattern);
   if (!regex.hasMatch(value)) {
-    return 'Email format is invalid, example: email@example.com';
+    return 'הכנס דואר אלקטרוני בפורמט תקין, לדוגמא: name@mail.com';
   } else {
     return null;
   }
@@ -15,7 +15,7 @@ String emailValidator(String value) {
 
 String pwdValidator(String value) {
   if (value.length < 6) {
-    return 'Password must be longer than 6 characters';
+    return 'סיסמא חייבת להכיל יותר מ 6 תווים';
   } else {
     return null;
   }
@@ -23,9 +23,9 @@ String pwdValidator(String value) {
 
 String userNameValidator(String value) {
   if (value.length > 15) {
-    return 'Username must be shorter than 15 characters';
+    return 'שם פרטי חייב להכיל פחות מ 15 תווים';
   } if (value.length < 2) {
-    return 'Username must be longer than 2 characters';
+    return 'שם פרטי חייב להכיל יותר מ 2 תווים';
   } else {
     return null;
   }
@@ -39,7 +39,7 @@ warningAlerts(BuildContext context,String msg) {
     buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
     headerAnimationLoop: true,
     animType: AnimType.BOTTOMSLIDE,
-    title: 'WARNING!',
+    title: 'אזהרה!',
     desc: msg,
     showCloseIcon: true,
     //btnCancelOnPress: () {},
@@ -55,7 +55,7 @@ successAlert(BuildContext context,String msg) {
     buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
     headerAnimationLoop: true,
     animType: AnimType.BOTTOMSLIDE,
-    title: 'Success!',
+    title: 'בוצע בהצלחה!',
     desc: msg,
     showCloseIcon: true,
     //btnCancelOnPress: () {},

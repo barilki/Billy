@@ -28,7 +28,7 @@ class _AuthPageState extends State<AuthPage> {
                     height: 70.0,
                   ),
                   RoundedButton(
-                    title: 'Sign In',
+                    title: 'התחברות',
                       colour: Colors.black,
                       fontColour: Colors.white,
                       onPressed: (){
@@ -36,7 +36,7 @@ class _AuthPageState extends State<AuthPage> {
                       },
                   ),
                   RoundedButton(
-                    title: 'Sign up',
+                    title: 'הרשמה',
                     colour: Colors.black,
                     fontColour: Colors.white,
                     onPressed: (){

@@ -1,3 +1,4 @@
+import 'package:billy/chart/graph.dart';
 import 'package:billy/constants/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -37,11 +38,19 @@ class PieChartPageState extends State {
           appBar: AppBar(
               backgroundColor: kBackGroundColor,
               automaticallyImplyLeading: true,
+              actions: [
+                IconButton(icon: Icon(Icons.pie_chart, color: Colors.yellow,), onPressed: () {
+
+                }),
+                IconButton(icon: Icon(Icons.bar_chart, color: Colors.blueAccent,), onPressed: () {
+
+                }),
+              ],
               title: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Statistic'),
+                  Text('סטטיסטיקה'),
                 ],
               )),
           body: Column(

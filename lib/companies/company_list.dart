@@ -37,7 +37,7 @@ class CompanyList extends StatelessWidget {
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (!snapshot.hasData) {
-              return Text('Loading...');
+              return Text('');
             }
             return Scaffold(
               resizeToAvoidBottomInset: false,
@@ -54,11 +54,11 @@ class CompanyList extends StatelessWidget {
                       title: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Date: " + document.data()['invoiceDate'],
+                          Text("תאריך: " + document.data()['invoiceDate'],
                               style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.bold)),
-                          Text("Due Date: " + document.data()['invoiceDueDate'],
+                          Text("תאריך פירעון: " + document.data()['invoiceDueDate'],
                               style: TextStyle(
                                   color: Colors.red,
                                   fontWeight: FontWeight.bold)),
@@ -67,12 +67,12 @@ class CompanyList extends StatelessWidget {
                       subtitle: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Invoice ID: " + document.data()['invoiceID'],
+                          Text("מספר חשבונית: " + document.data()['invoiceID'],
                               style: TextStyle(
                                   color: Colors.blue,
                                   fontWeight: FontWeight.bold)),
                           SizedBox(width: 10),
-                          Text("Sum: " + document.data()['invoiceSum'],
+                          Text("סכום: " + document.data()['invoiceSum'] + '₪',
                               style: TextStyle(
                                   color: Colors.green,
                                   fontWeight: FontWeight.bold)),
@@ -174,13 +174,13 @@ class CompanyList extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return CupertinoAlertDialog(
-          content: Text('Are you sure want to delete this invoice?'),
+          content: Text('האם ברצונך למחוק את החשבונית?'),
           actions: <Widget>[
             CupertinoDialogAction(
                 child: Row(
               children: [
                 TextButton(
-                    child: Text('Yes'),
+                    child: Text('כן'),
                     onPressed: () async {
                       Navigator.pop(context);
                       await FirebaseFirestore.instance
@@ -194,7 +194,7 @@ class CompanyList extends StatelessWidget {
                           .delete();
                     }),
                 TextButton(
-                    child: Text('No'),
+                    child: Text('לא'),
                     onPressed: () {
                       Navigator.pop(context);
                     }),

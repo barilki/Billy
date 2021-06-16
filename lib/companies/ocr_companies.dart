@@ -46,7 +46,6 @@ class OcrCompanies {
 
   //return sum from invoice
   Future<String> getSum() async {
-    print('hello');
     final startIndex = await text.indexOf(startWordForSum);
     final endIndex = await text.indexOf(endWordForSum, startIndex + startWordForSum.length);
     print(text.substring(startIndex + startWordForSum.length, endIndex));

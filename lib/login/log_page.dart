@@ -4,6 +4,7 @@ import 'package:billy/constants/constants.dart';
 import 'package:billy/validation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   static const String id = 'login_screen';
@@ -45,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
                       _email = value.trim();
                     });
                   },
-                  decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your email address',prefixIcon: Icon(Icons.email,color : Colors.white)),
+                  decoration: kTextFieldDecoration.copyWith(hintText: 'דואר אלקטרוני',prefixIcon: Icon(Icons.email,color : Colors.white)),
                 ),
                 SizedBox(
                   height: 8.0,
@@ -59,10 +60,10 @@ class _LoginPageState extends State<LoginPage> {
                       _password = value.trim();
                     });
                   },
-                  decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your password',prefixIcon: Icon(Icons.lock, color: Colors.white),)
+                  decoration: kTextFieldDecoration.copyWith(hintText: 'סיסמא',prefixIcon: Icon(Icons.lock, color: Colors.white),)
                 ),
                 showSpinner? RoundedButton(
-                  title: 'Log In',
+                  title: 'התחבר',
                   colour: Colors.black,
                   fontColour: Colors.white,
                   onPressed: () async {
@@ -71,15 +72,15 @@ class _LoginPageState extends State<LoginPage> {
                         setState(() {
                           showSpinnerFlag();
                         });
-                        await FirebaseAuth.instance.signInWithEmailAndPassword(
+                        await _auth.signInWithEmailAndPassword(
                             email: _email, password: _password);
                         Navigator.push(context, MaterialPageRoute(builder: (
                             context) => BillyMainPage()));
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'user-not-found') {
-                          warningAlerts(context, 'No user found for that email.');
+                          warningAlerts(context, 'דואר אלקטרוני לא נמצא');
                         } else if (e.code == 'wrong-password') {
-                          warningAlerts(context, 'Wrong password provided for that user.');
+                          warningAlerts(context, 'סיסמא שגויה.');
                         }
                       }
                       setState(() {
@@ -108,5 +109,6 @@ class _LoginPageState extends State<LoginPage> {
   void showSpinnerFlag(){
     showSpinner = !showSpinner;
   }
+
 
 }

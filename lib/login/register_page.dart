@@ -49,7 +49,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       });
 
                     },
-                    decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your username',prefixIcon: Icon(Icons.account_circle_sharp, color: Colors.white),)
+                    decoration: kTextFieldDecoration.copyWith(hintText: 'שם פרטי',prefixIcon: Icon(Icons.account_circle_sharp, color: Colors.white),)
                 ),
 
                 SizedBox(
@@ -63,7 +63,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       _email = value.trim();
                     });
                   },
-                  decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your email address',prefixIcon: Icon(Icons.email, color: Colors.white),)
+                  decoration: kTextFieldDecoration.copyWith(hintText: 'דואר אלקטרוני',prefixIcon: Icon(Icons.email, color: Colors.white),)
                 ),
 
                 SizedBox(
@@ -78,10 +78,10 @@ class _RegisterPageState extends State<RegisterPage> {
                       _password = value.trim();
                     });
                   },
-                  decoration: kTextFieldDecoration.copyWith(hintText: 'Enter your password',prefixIcon: Icon(Icons.lock, color: Colors.white),)
+                  decoration: kTextFieldDecoration.copyWith(hintText: 'סיסמא',prefixIcon: Icon(Icons.lock, color: Colors.white),)
                 ),
                 RoundedButton(
-                  title: 'Register',
+                  title: 'הירשם',
                   colour: Colors.black,
                   fontColour: Colors.white,
                   onPressed: (){
@@ -92,9 +92,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) =>
                                   LoginPage()));
-                          successAlert(context, 'Registered successfully.');
+                          successAlert(context, 'הרשמה בוצעה בהצלחה.');
                         }).catchError((e) {
-                          warningAlerts(context, 'The email address is already in use by another account');
+                          warningAlerts(context, 'הדואר אלקטרוני נמצא כבר בשימוש.');
                         });
                       }
                   },

@@ -20,4 +20,6 @@ class SharedPrefs {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(key)??"";
   }
+
+
 }
