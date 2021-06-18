@@ -19,7 +19,7 @@ class PieData{
 
   makeData() {
     colors = [Colors.orange, Colors.blue, Colors.black, Colors.grey, Colors.pink, Colors.green];
-    companyName = ['IEC', 'Water company', 'Gas company', 'Arnona company', 'Cellular company', 'Tv company'];
+    companyName = ['חברת חשמל', 'מים', 'גז', 'ארנונה', 'סלולר', 'כבלים'];
     newData = [iec,water,gas,arnona,cellular,tv];
     if (iec.toString() != 'NaN') {
       for (var i = 0; i < newData.length; i++) {

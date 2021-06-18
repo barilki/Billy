@@ -9,8 +9,6 @@ import '../icons/rounded_button.dart';
 
 
 class RegisterPage extends StatefulWidget {
-  static const String id = 'login_screen';
-
   @override
   _RegisterPageState createState() => _RegisterPageState();
 }

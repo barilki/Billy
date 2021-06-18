@@ -19,7 +19,7 @@ class BillyMainPage extends StatefulWidget {
 
 
 class _BillyMainPageState extends State<BillyMainPage> {
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
 
   @override
@@ -36,7 +36,7 @@ class _BillyMainPageState extends State<BillyMainPage> {
                 return Text("");
               },
             ),
-            Text(('שלום ' + auth.currentUser.displayName),textDirection: TextDirection.rtl,),
+            Text(('שלום ' + _auth.currentUser.displayName),textDirection: TextDirection.rtl,),
             kMainLogo,
             kSmallLogo,
             SizedBox(
@@ -55,7 +55,7 @@ class _BillyMainPageState extends State<BillyMainPage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  MainCompanies(companyName: 'IEC')));
+                                  MainCompanies(companyName: 'חברת חשמל')));
                     },
                     colour: Colors.white,
                     cardChild: IconContent(img: 'electric.png'),
@@ -66,7 +66,7 @@ class _BillyMainPageState extends State<BillyMainPage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  MainCompanies(companyName: 'Water company')));
+                                  MainCompanies(companyName: 'מים')));
                     },
                     colour: Colors.white,
                     cardChild: IconContent(img: 'water.png'),
@@ -77,7 +77,7 @@ class _BillyMainPageState extends State<BillyMainPage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  MainCompanies(companyName: 'Gas company')));
+                                  MainCompanies(companyName: 'גז')));
                     },
                     colour: Colors.white,
                     cardChild: IconContent(img: 'gas.png'),
@@ -88,7 +88,7 @@ class _BillyMainPageState extends State<BillyMainPage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => MainCompanies(
-                                  companyName: 'Arnona company')));
+                                  companyName: 'ארנונה')));
                     },
                     colour: Colors.white,
                     cardChild: IconContent(img: 'arnona.png'),
@@ -99,7 +99,7 @@ class _BillyMainPageState extends State<BillyMainPage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => MainCompanies(
-                                  companyName: 'Cellular company')));
+                                  companyName: 'סלולר')));
                     },
                     colour: Colors.white,
                     cardChild: IconContent(img: 'smartphone.png'),
@@ -110,7 +110,7 @@ class _BillyMainPageState extends State<BillyMainPage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  MainCompanies(companyName: 'Tv company')));
+                                  MainCompanies(companyName: 'כבלים')));
                     },
                     colour: Colors.white,
                     cardChild: IconContent(img: 'television.png'),
@@ -129,7 +129,9 @@ class _BillyMainPageState extends State<BillyMainPage> {
 
             ),
             TextButton(onPressed: () async{
-              await FirebaseAuth.instance.signOut();
+              await _auth.signOut();
+              Navigator.push(context, MaterialPageRoute(builder: (
+                  context) => LoginPage()));
               Navigator.push(context, MaterialPageRoute(builder: (
                   context) => LoginPage()));
             }, child: Text('התנתק'))
