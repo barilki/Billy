@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'pie_chart_page.dart';
 
 class BarChartSample3 extends StatefulWidget {
   @override
@@ -19,7 +20,7 @@ class BarChartSample3State extends State<BarChartSample3> {
           child: BarChart(
             BarChartData(
               alignment: BarChartAlignment.spaceAround,
-              maxY: 20,
+              maxY: 2000,
               barTouchData: BarTouchData(
                 enabled: false,
                 touchTooltipData: BarTouchTooltipData(
@@ -52,7 +53,7 @@ class BarChartSample3State extends State<BarChartSample3> {
                   getTitles: (double value) {
                     switch (value.toInt()) {
                       case 0:
-                        return 'Mn';
+                        return PieChartPageState.testMap.keys.toString()[0];
                       case 1:
                         return 'Te';
                       case 2:
@@ -68,7 +69,7 @@ class BarChartSample3State extends State<BarChartSample3> {
                       default:
                         return '';
                     }
-                  },
+                  }
                 ),
                 leftTitles: SideTitles(showTitles: false),
               ),
@@ -79,7 +80,7 @@ class BarChartSample3State extends State<BarChartSample3> {
                 BarChartGroupData(
                   x: 0,
                   barRods: [
-                    BarChartRodData(y: 8, colors: [Colors.lightBlueAccent, Colors.greenAccent])
+                    BarChartRodData(y: 1700, colors: [Colors.lightBlueAccent, Colors.greenAccent])
                   ],
                   showingTooltipIndicators: [0],
                 ),
@@ -101,20 +102,6 @@ class BarChartSample3State extends State<BarChartSample3> {
                   x: 3,
                   barRods: [
                     BarChartRodData(y: 15, colors: [Colors.lightBlueAccent, Colors.greenAccent])
-                  ],
-                  showingTooltipIndicators: [0],
-                ),
-                BarChartGroupData(
-                  x: 3,
-                  barRods: [
-                    BarChartRodData(y: 13, colors: [Colors.lightBlueAccent, Colors.greenAccent])
-                  ],
-                  showingTooltipIndicators: [0],
-                ),
-                BarChartGroupData(
-                  x: 3,
-                  barRods: [
-                    BarChartRodData(y: 10, colors: [Colors.lightBlueAccent, Colors.greenAccent])
                   ],
                   showingTooltipIndicators: [0],
                 ),

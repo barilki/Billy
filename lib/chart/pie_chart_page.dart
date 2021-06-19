@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:billy/chart/graph.dart';
 import 'package:billy/constants/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,20 +24,32 @@ class PieChartPageState extends State {
       percentCellular,
       percentTv;
   static double total = 0.0;
+  static double totalPerCompany = 0.0;
   String selectedYear;
   String selectedMonth;
+  String startYear, endYear,selectedCompany;
   var res;
   var statisticType;
+  static var testMap = {};
+  var companiesDetails;
+  final List<String> _companies = ['חברת חשמל', 'מים', 'גז', 'ארנונה', 'סלולר', 'כבלים'].toList();
+  final List<String> _startYears = ['2000', '2001', '2002', '2003','2004', '2005', '2006', '2007','2008', '2009', '2010', '2011', '2012', '2013','2014', '2015', '2016', '2017', '2018', '2019','2020', '2021', '2022', '2023',].toList();
+  final List<String> _endYears = ['2000', '2001', '2002', '2003','2004', '2005', '2006', '2007','2008', '2009', '2010', '2011', '2012', '2013','2014', '2015', '2016', '2017', '2018', '2019','2020', '2021', '2022', '2023',].toList();
+
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    selectedCompany = _companies.first;
+    startYear = _startYears.first;
+    endYear = _endYears.last;
     statisticType = pieChartBody();
   }
 
   @override
-  Widget build(BuildContext context) => Card(
+  Widget build(BuildContext context) =>
+      Card(
         child: Scaffold(
           appBar: AppBar(
               backgroundColor: kBackGroundColor,
@@ -87,8 +101,8 @@ class PieChartPageState extends State {
   }
 
   // retrieve invoiceSum from firestore and calculate sum for each company by month and year
-  Future<double> calculateSum(
-      String companyName, String month, String year, double total) async {
+  Future<double> calculateSum(String companyName, String month, String year,
+      double total) async {
     final user = FirebaseAuth.instance.currentUser;
     await FirebaseFirestore.instance
         .collection("users")
@@ -143,6 +157,111 @@ class PieChartPageState extends State {
         columnWidth: 100);
   }
 
+  companyAndYearPicker() {
+    return showDialog(
+        context: context,
+        builder: (context) {
+      return StatefulBuilder(builder: (context, setState)
+      {
+        return AlertDialog(
+          title: Text('אנא בחר סוג חברה ותאריך', textDirection: TextDirection.rtl,),
+          actions: [
+            Text('בחר חברה', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 15),),
+            DropdownButton<String>(
+              focusColor: Colors.white,
+              value: selectedCompany,
+              style: TextStyle(color: Colors.white),
+              iconEnabledColor: Colors.black,
+              items: _companies.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value, style: TextStyle(color: Colors.black),),
+                );
+              }).toList(),
+              hint: Text(
+                "בחר חברה",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500),
+              ),
+              onChanged: (String value) {
+                setState(() {
+                  selectedCompany = value;
+                });
+              },
+            ),
+            Text('בחר תאריך התחלה', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 15),),
+            DropdownButton<String>(
+              focusColor: Colors.white,
+              value: startYear,
+              style: TextStyle(color: Colors.white),
+              iconEnabledColor: Colors.black,
+              items: _startYears.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value, style: TextStyle(color: Colors.black),),
+                );
+              }).toList(),
+              hint: Text(
+                "תאריך התחלה",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500),
+              ),
+              onChanged: (String value) {
+                setState(() {
+                  startYear = value;
+                });
+              },
+            ),
+            Text('בחר תאריך סיום', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 15),),
+            DropdownButton<String>(
+              focusColor: Colors.white,
+              value: endYear,
+              style: TextStyle(color: Colors.white),
+              iconEnabledColor: Colors.black,
+              items: _endYears.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value, style: TextStyle(color: Colors.black),),
+                );
+              }).toList(),
+              hint: Text(
+                "תאריך סיום",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500),
+              ),
+              onChanged: (String value) {
+                setState(() {
+                  endYear = value;
+                });
+              },
+            ),
+            Row(
+              children: [
+                TextButton(
+                    onPressed: () async {
+                      Navigator.pop(context);
+                      await lineStatisticCalc(
+                          startYear, endYear, selectedCompany);
+                    },
+                    child: Text('חיפוש')),
+                TextButton(onPressed: () {
+                  Navigator.pop(context);
+                }, child: Text("ביטול")),
+              ],
+            ),
+          ],
+
+        );
+      });
+        });
+  }
+
   pieChartBody() {
     return Column(
       children: <Widget>[
@@ -152,28 +271,29 @@ class PieChartPageState extends State {
               onPressed: () {
                 return showDialog(
                     context: context,
-                    builder: (context) => AlertDialog(
-                      actions: [
-                        Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: datePicker(),
-                        ),
-                        Row(
-                          children: [
-                            TextButton(
-                                onPressed: () async {
+                    builder: (context) =>
+                        AlertDialog(
+                          actions: [
+                            Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: datePicker(),
+                            ),
+                            Row(
+                              children: [
+                                TextButton(
+                                    onPressed: () async {
+                                      Navigator.pop(context);
+                                      await statCalc(
+                                          selectedMonth, selectedYear);
+                                    },
+                                    child: Text('חיפוש')),
+                                TextButton(onPressed: () {
                                   Navigator.pop(context);
-                                  await statCalc(
-                                      selectedMonth, selectedYear);
-                                },
-                                child: Text('חיפוש')),
-                            TextButton(onPressed: () {
-                              Navigator.pop(context);
-                            }, child: Text("ביטול")),
+                                }, child: Text("ביטול")),
+                              ],
+                            )
                           ],
-                        )
-                      ],
-                    ));
+                        ));
               },
               child: Text("תאריך לבחירה"),
             ),
@@ -209,30 +329,7 @@ class PieChartPageState extends State {
           children: [
             TextButton(
               onPressed: () {
-                return showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      actions: [
-                        Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: datePicker(),
-                        ),
-                        Row(
-                          children: [
-                            TextButton(
-                                onPressed: () async {
-                                  Navigator.pop(context);
-                                  await statCalc(
-                                      selectedMonth, selectedYear);
-                                },
-                                child: Text('חיפוש')),
-                            TextButton(onPressed: () {
-                              Navigator.pop(context);
-                            }, child: Text("ביטול")),
-                          ],
-                        ),
-                      ],
-                    ));
+                companyAndYearPicker();
               },
               child: Text("תאריך לבחירה וסוג חברה"),
             ),
@@ -253,4 +350,33 @@ class PieChartPageState extends State {
       ],
     );
   }
+
+  lineStatisticCalc(String startYear, String endYear,String selectedCompany) async {
+    final user = FirebaseAuth.instance.currentUser;
+    bool flag = false;
+    await FirebaseFirestore.instance.collection("users").doc(user.uid).collection(selectedCompany).get().then((value) {
+      value.docs.forEach((element) async {
+        int res = int.parse(element.get('invoiceDate').toString().split('/')[2]); // take year from specific invoice (yyyy)
+        if ((res >= int.parse(startYear)) && res <= int.parse(endYear)){
+          totalPerCompany = double.parse(element.get('invoiceSum')); // take sum from specific invoice
+          //testMap.addAll({res : totalPerCompany});
+          // if (testMap.containsKey(res)) {
+          //   testMap.update(res, (value) => value + totalPerCompany);
+          // }
+          //totalPerCompany =0;
+          testMap.forEach((key, value) {
+            if (key == res && value != totalPerCompany) {
+              testMap.update(key, (value) => totalPerCompany +value);
+            }
+          });
+        }
+      });
+    });
+    print(testMap);
+  }
+
+
+
 }
+
+
