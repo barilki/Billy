@@ -6,13 +6,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:notifications/notifications.dart';
 
 class CompanyList extends StatelessWidget {
   final String companyName;
   final String searchResults;
   final String sortBy;
   static double count = 0; //sum for counting total invoices sum
+  static List<NotificationEvent> log = [];
   final user = FirebaseAuth.instance.currentUser;
+  static final DateTime now = DateTime.now();
+  static final DateFormat formatter = DateFormat('dd-MM-yyyy');
+  final String formatted = formatter.format(now);
 
   CompanyList({this.companyName, this.searchResults, this.sortBy});
 
@@ -57,11 +63,11 @@ class CompanyList extends StatelessWidget {
                           Text("תאריך: " + document.data()['invoiceDate'],
                               style: TextStyle(
                                   color: Colors.black,
-                                  fontWeight: FontWeight.bold)),
+                                  fontWeight: FontWeight.bold,fontSize: 13)),
                           Text("תאריך פירעון: " + document.data()['invoiceDueDate'],
                               style: TextStyle(
                                   color: Colors.red,
-                                  fontWeight: FontWeight.bold)),
+                                  fontWeight: FontWeight.bold,fontSize: 13)),
                         ],
                       ),
                       subtitle: Row(
@@ -70,12 +76,12 @@ class CompanyList extends StatelessWidget {
                           Text("מספר חשבונית: " + document.data()['invoiceID'],
                               style: TextStyle(
                                   color: Colors.blue,
-                                  fontWeight: FontWeight.bold)),
-                          SizedBox(width: 10),
+                                  fontWeight: FontWeight.bold,fontSize: 13)),
+                          SizedBox(width: 5),
                           Text("סכום: " + document.data()['invoiceSum'] + '₪',
                               style: TextStyle(
                                   color: Colors.green,
-                                  fontWeight: FontWeight.bold)),
+                                  fontWeight: FontWeight.bold,fontSize: 13)),
                         ],
                       ),
                       // On press delete button, delete document from list view and database
@@ -141,32 +147,7 @@ class CompanyList extends StatelessWidget {
           );
         });
   }
-
-  //   return await showDialog(
-  //       context: context,
-  //       builder: (context) {
-  //         return StatefulBuilder(builder: (context, setState) {
-  //           return AlertDialog(
-  //             //insetPadding: EdgeInsets.symmetric(horizontal: 10),
-  //             contentPadding: EdgeInsets.all(5.0),
-  //             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-  //             actions: [
-  //               Column(
-  //
-  //                 children: [
-  //                   Image.network(
-  //                     url,
-  //                     width: 250,
-  //                     height: 250,
-  //                     fit: BoxFit.fill,
-  //                   ),
-  //                 ],
-  //               )
-  //             ],
-  //           );
-  //         });
-  //       });
-  // }
+  
 
   //delete invoice from firebase
   Future<void> deleteInvoice(BuildContext context, document) async {

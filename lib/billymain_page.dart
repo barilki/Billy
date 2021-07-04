@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:billy/compare_page.dart';
+import 'package:billy/login/auth_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:billy/icons/icon_content.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,7 +17,6 @@ class BillyMainPage extends StatefulWidget {
   _BillyMainPageState createState() => _BillyMainPageState();
 
 }
-
 
 class _BillyMainPageState extends State<BillyMainPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -131,9 +131,7 @@ class _BillyMainPageState extends State<BillyMainPage> {
             TextButton(onPressed: () async{
               await _auth.signOut();
               Navigator.push(context, MaterialPageRoute(builder: (
-                  context) => LoginPage()));
-              Navigator.push(context, MaterialPageRoute(builder: (
-                  context) => LoginPage()));
+                  context) => AuthPage()));
             }, child: Text('התנתק'))
           ],
         ),

@@ -5,11 +5,16 @@ import 'pie_chart_page.dart';
 class BarChartSample3 extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => BarChartSample3State();
+
 }
 
 class BarChartSample3State extends State<BarChartSample3> {
+  List<int> intList = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14];
   @override
   Widget build(BuildContext context) {
+    setState(() {
+
+    });
     return AspectRatio(
       aspectRatio: 1.7,
       child: Scaffold(
@@ -51,24 +56,65 @@ class BarChartSample3State extends State<BarChartSample3> {
                       color: Color(0xff7589a2), fontWeight: FontWeight.bold, fontSize: 14),
                   margin: 20,
                   getTitles: (double value) {
-                    switch (value.toInt()) {
-                      case 0:
-                        return PieChartPageState.testMap.keys.toString()[0];
-                      case 1:
-                        return 'Te';
-                      case 2:
-                        return 'Wd';
-                      case 3:
-                        return 'Tu';
-                      case 4:
-                        return 'Fr';
-                      case 5:
-                        return 'St';
-                      case 6:
-                        return 'Sn';
-                      default:
-                        return '';
-                    }
+                      switch (value.toInt()) {
+                        case 0:
+                            if(value.toInt() < PieChartPageState.newMap.length) {
+                              return PieChartPageState.newMap.keys.elementAt(value.toInt());
+                            }
+                          return "";
+                        case 1:
+                          if(value.toInt() < PieChartPageState.newMap.length) {
+                            return PieChartPageState.newMap.keys.elementAt(value.toInt());
+                          }
+                          return "";
+                        case 2:
+                          if(value.toInt() < PieChartPageState.newMap.length) {
+                            return PieChartPageState.newMap.keys.elementAt(value.toInt());
+                          }
+                          return "";
+                        case 3:
+                          if(value.toInt() < PieChartPageState.newMap.length) {
+                            return PieChartPageState.newMap.keys.elementAt(value.toInt());
+                          }
+                          return "";
+                        case 4:
+                          if(value.toInt() < PieChartPageState.newMap.length) {
+                            return PieChartPageState.newMap.keys.elementAt(value.toInt());
+                          }
+                          return "";
+                        case 5:
+                          if(value.toInt() < PieChartPageState.newMap.length) {
+                            return PieChartPageState.newMap.keys.elementAt(value.toInt());
+                          }
+                          return "";
+                        case 6:
+                          if(value.toInt() < PieChartPageState.newMap.length) {
+                            return PieChartPageState.newMap.keys.elementAt(value.toInt());
+                          }
+                          return "";
+                        case 7:
+                          if(value.toInt() < PieChartPageState.newMap.length) {
+                            return PieChartPageState.newMap.keys.elementAt(value.toInt());
+                          }
+                          return "";
+                        case 8:
+                          if(value.toInt() < PieChartPageState.newMap.length) {
+                            return PieChartPageState.newMap.keys.elementAt(value.toInt());
+                          }
+                          return "";
+                        case 9:
+                          if(value.toInt() < PieChartPageState.newMap.length) {
+                            return PieChartPageState.newMap.keys.elementAt(value.toInt());
+                          }
+                          return "";
+                        case 10:
+                          if(value.toInt() < PieChartPageState.newMap.length) {
+                            return PieChartPageState.newMap.keys.elementAt(value.toInt());
+                          }
+                          return "";
+                        default:
+                          return "";
+                      }
                   }
                 ),
                 leftTitles: SideTitles(showTitles: false),
@@ -76,40 +122,30 @@ class BarChartSample3State extends State<BarChartSample3> {
               borderData: FlBorderData(
                 show: false,
               ),
-              barGroups: [
-                BarChartGroupData(
-                  x: 0,
-                  barRods: [
-                    BarChartRodData(y: 1700, colors: [Colors.lightBlueAccent, Colors.greenAccent])
-                  ],
-                  showingTooltipIndicators: [0],
-                ),
-                BarChartGroupData(
-                  x: 1,
-                  barRods: [
-                    BarChartRodData(y: 10, colors: [Colors.lightBlueAccent, Colors.greenAccent])
-                  ],
-                  showingTooltipIndicators: [0],
-                ),
-                BarChartGroupData(
-                  x: 2,
-                  barRods: [
-                    BarChartRodData(y: 14, colors: [Colors.lightBlueAccent, Colors.greenAccent])
-                  ],
-                  showingTooltipIndicators: [0],
-                ),
-                BarChartGroupData(
-                  x: 3,
-                  barRods: [
-                    BarChartRodData(y: 15, colors: [Colors.lightBlueAccent, Colors.greenAccent])
-                  ],
-                  showingTooltipIndicators: [0],
-                ),
-              ],
+              barGroups: setValues(),
             ),
           ),
         ),
       ),
     );
   }
+
+  setValues() {
+    List<BarChartGroupData> barChartList =[];
+    for (var i=0; i < PieChartPageState.newMap.length ; i++) {
+      barChartList.add(BarChartGroupData(
+        x: i,
+        barRods: [
+          BarChartRodData(y: double.parse(PieChartPageState.newMap.values.elementAt(i)))
+        ],
+        showingTooltipIndicators: intList,
+      ));
+    }
+    setState(() {
+
+    });
+    return barChartList;
+  }
+
+
 }

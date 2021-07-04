@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:billy/chart/graph.dart';
 import 'package:billy/constants/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,13 +15,8 @@ class PieChartPage extends StatefulWidget {
 }
 
 class PieChartPageState extends State {
-  double iecSum, waterSum, gasSum, arnonaSum, cellularSum, tvSum;
-  static double percentIEC,
-      percentWater,
-      percentGas,
-      percentArnona,
-      percentCellular,
-      percentTv;
+  double  iecSum, waterSum, gasSum, arnonaSum, cellularSum, tvSum;
+  static double percentIEC, percentWater, percentGas, percentArnona, percentCellular, percentTv;
   static double total = 0.0;
   static double totalPerCompany = 0.0;
   String selectedYear;
@@ -30,8 +24,8 @@ class PieChartPageState extends State {
   String startYear, endYear,selectedCompany;
   var res;
   var statisticType;
-  static var testMap = {};
-  var companiesDetails;
+  static Map testMap = {};
+  static Map newMap = {};
   final List<String> _companies = ['חברת חשמל', 'מים', 'גז', 'ארנונה', 'סלולר', 'כבלים'].toList();
   final List<String> _startYears = ['2000', '2001', '2002', '2003','2004', '2005', '2006', '2007','2008', '2009', '2010', '2011', '2012', '2013','2014', '2015', '2016', '2017', '2018', '2019','2020', '2021', '2022', '2023',].toList();
   final List<String> _endYears = ['2000', '2001', '2002', '2003','2004', '2005', '2006', '2007','2008', '2009', '2010', '2011', '2012', '2013','2014', '2015', '2016', '2017', '2018', '2019','2020', '2021', '2022', '2023',].toList();
@@ -44,8 +38,10 @@ class PieChartPageState extends State {
     selectedCompany = _companies.first;
     startYear = _startYears.first;
     endYear = _endYears.last;
-    statisticType = pieChartBody();
+    statisticType = 'pie';
   }
+
+
 
   @override
   Widget build(BuildContext context) =>
@@ -62,7 +58,7 @@ class PieChartPageState extends State {
                     ),
                     onPressed: () {
                       setState(() {
-                        statisticType = pieChartBody();
+                        statisticType = 'pie';
                       });
                     }),
                 IconButton(
@@ -71,9 +67,9 @@ class PieChartPageState extends State {
                       color: Colors.blueAccent,
                     ),
                     onPressed: () {
-                      setState(() {
-                        statisticType = lineChartBody();
-                      });
+                        setState(() {
+                          statisticType = 'line';
+                        });
                     }),
               ],
               title: Column(
@@ -83,11 +79,11 @@ class PieChartPageState extends State {
                   Text('סטטיסטיקה'),
                 ],
               )),
-          body: statisticType,
+          body: getChartType(),
         ),
       );
 
-  // calculate invoice sum for each company
+  //Calculate invoice sum for each company.
   Future<void> statCalc(String month, String year) async {
     total = 0.0;
     iecSum = await calculateSum('חברת חשמל', month, year, total);
@@ -97,12 +93,12 @@ class PieChartPageState extends State {
     cellularSum = await calculateSum('סלולר', month, year, total);
     tvSum = await calculateSum('כבלים', month, year, total);
     calculatePercent();
-    setState(() {});
+    setState(() {
+    });
   }
 
-  // retrieve invoiceSum from firestore and calculate sum for each company by month and year
-  Future<double> calculateSum(String companyName, String month, String year,
-      double total) async {
+  //Retrieve invoiceSum from firestore and calculate sum for each company by month and year.
+  Future<double> calculateSum(String companyName, String month, String year, double total) async {
     final user = FirebaseAuth.instance.currentUser;
     await FirebaseFirestore.instance
         .collection("users")
@@ -117,22 +113,28 @@ class PieChartPageState extends State {
           total += double.parse(result.get('invoiceSum'));
       });
     });
+    setState(() {
+    });
     return total;
   }
 
-  // calculate percent for each company by their total sum
+  //Calculate percent for each company by their total sum.
   calculatePercent() async {
     double totalSum =
-        iecSum + waterSum + gasSum + arnonaSum + cellularSum + tvSum;
+       iecSum + waterSum + gasSum + arnonaSum + cellularSum + tvSum;
     percentIEC = ((100 * iecSum) / totalSum).roundToDouble();
     percentWater = ((100 * waterSum) / totalSum).roundToDouble();
     percentGas = ((100 * gasSum) / totalSum).roundToDouble();
     percentArnona = ((100 * arnonaSum) / totalSum).roundToDouble();
     percentCellular = ((100 * cellularSum) / totalSum).roundToDouble();
     percentTv = ((100 * tvSum) / totalSum).roundToDouble();
+    setState(() {
+
+    });
+
   }
 
-  //Date picker for calculate statistics
+  //Date picker for calculate statistics.
   datePicker() {
     return LinearDatePicker(
         startDate: "2000/01/01",
@@ -142,7 +144,8 @@ class PieChartPageState extends State {
         dateChangeListener: (String selectedDate) {
           selectedYear = selectedDate.split('/')[0];
           selectedMonth = selectedDate.split('/')[1];
-        },
+        }
+        ,
         showDay: false,
         //false -> shows only year & month // true -> shows day & month & year
         fontFamily: 'sans',
@@ -155,114 +158,11 @@ class PieChartPageState extends State {
         monthText: "חודש",
         dayText: "Day",
         columnWidth: 100);
+
   }
 
-  companyAndYearPicker() {
-    return showDialog(
-        context: context,
-        builder: (context) {
-      return StatefulBuilder(builder: (context, setState)
-      {
-        return AlertDialog(
-          title: Text('אנא בחר סוג חברה ותאריך', textDirection: TextDirection.rtl,),
-          actions: [
-            Text('בחר חברה', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 15),),
-            DropdownButton<String>(
-              focusColor: Colors.white,
-              value: selectedCompany,
-              style: TextStyle(color: Colors.white),
-              iconEnabledColor: Colors.black,
-              items: _companies.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value, style: TextStyle(color: Colors.black),),
-                );
-              }).toList(),
-              hint: Text(
-                "בחר חברה",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500),
-              ),
-              onChanged: (String value) {
-                setState(() {
-                  selectedCompany = value;
-                });
-              },
-            ),
-            Text('בחר תאריך התחלה', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 15),),
-            DropdownButton<String>(
-              focusColor: Colors.white,
-              value: startYear,
-              style: TextStyle(color: Colors.white),
-              iconEnabledColor: Colors.black,
-              items: _startYears.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value, style: TextStyle(color: Colors.black),),
-                );
-              }).toList(),
-              hint: Text(
-                "תאריך התחלה",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500),
-              ),
-              onChanged: (String value) {
-                setState(() {
-                  startYear = value;
-                });
-              },
-            ),
-            Text('בחר תאריך סיום', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 15),),
-            DropdownButton<String>(
-              focusColor: Colors.white,
-              value: endYear,
-              style: TextStyle(color: Colors.white),
-              iconEnabledColor: Colors.black,
-              items: _endYears.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value, style: TextStyle(color: Colors.black),),
-                );
-              }).toList(),
-              hint: Text(
-                "תאריך סיום",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500),
-              ),
-              onChanged: (String value) {
-                setState(() {
-                  endYear = value;
-                });
-              },
-            ),
-            Row(
-              children: [
-                TextButton(
-                    onPressed: () async {
-                      Navigator.pop(context);
-                      await lineStatisticCalc(
-                          startYear, endYear, selectedCompany);
-                    },
-                    child: Text('חיפוש')),
-                TextButton(onPressed: () {
-                  Navigator.pop(context);
-                }, child: Text("ביטול")),
-              ],
-            ),
-          ],
-
-        );
-      });
-        });
-  }
-
-  pieChartBody() {
+  //Pie Chart body for statistic page.
+  pieChartBody()  {
     return Column(
       children: <Widget>[
         Column(
@@ -285,6 +185,9 @@ class PieChartPageState extends State {
                                       Navigator.pop(context);
                                       await statCalc(
                                           selectedMonth, selectedYear);
+                                      setState(() {
+
+                                      });
                                     },
                                     child: Text('חיפוש')),
                                 TextButton(onPressed: () {
@@ -322,6 +225,7 @@ class PieChartPageState extends State {
     );
   }
 
+  //Line Chart body for statistic page.
   lineChartBody() {
     return Column(
       children: <Widget>[
@@ -330,6 +234,8 @@ class PieChartPageState extends State {
             TextButton(
               onPressed: () {
                 companyAndYearPicker();
+                setState(() {
+                });
               },
               child: Text("תאריך לבחירה וסוג חברה"),
             ),
@@ -343,7 +249,8 @@ class PieChartPageState extends State {
           children: [
             Padding(
               padding: const EdgeInsets.all(30),
-              child: IndicatorsWidget(),
+              child: Text("גרף שנתי", style: TextStyle(color: Colors.lightBlue, fontWeight: FontWeight.bold,fontSize: 25),)
+              //IndicatorsWidget(),
             ),
           ],
         ),
@@ -351,30 +258,147 @@ class PieChartPageState extends State {
     );
   }
 
+  //Calculate total sum per year for chosen company
   lineStatisticCalc(String startYear, String endYear,String selectedCompany) async {
     final user = FirebaseAuth.instance.currentUser;
-    bool flag = false;
-    await FirebaseFirestore.instance.collection("users").doc(user.uid).collection(selectedCompany).get().then((value) {
-      value.docs.forEach((element) async {
+    List nlist = [];
+    newMap = {};
+    await FirebaseFirestore.instance.collection("users").doc(user.uid).collection(selectedCompany).get().then((ele) {
+      ele.docs.forEach((element) async {
         int res = int.parse(element.get('invoiceDate').toString().split('/')[2]); // take year from specific invoice (yyyy)
-        if ((res >= int.parse(startYear)) && res <= int.parse(endYear)){
-          totalPerCompany = double.parse(element.get('invoiceSum')); // take sum from specific invoice
-          //testMap.addAll({res : totalPerCompany});
-          // if (testMap.containsKey(res)) {
-          //   testMap.update(res, (value) => value + totalPerCompany);
-          // }
-          //totalPerCompany =0;
-          testMap.forEach((key, value) {
-            if (key == res && value != totalPerCompany) {
-              testMap.update(key, (value) => totalPerCompany +value);
-            }
-          });
-        }
-      });
+        totalPerCompany = double.parse(element.get('invoiceSum')); // take sum from specific invoice
+        nlist.add("$res:$totalPerCompany");
+      }
+      );
     });
-    print(testMap);
+    nlist.sort();
+    for(var e in nlist) {
+      var y = e.split(':')[0];
+      var a = e.split(':')[1];
+      if (newMap.containsKey(y)) {
+        newMap[y] = (double.parse(newMap[y]) + double.parse(a)).toString();
+        //m[y] += a;
+      }
+      else {
+        newMap[y] = (double.parse(a)).toString();
+      }
+    }
+    setState(() {
+    });
   }
 
+  //Company name with Date and Due date picker.
+  companyAndYearPicker() {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setState)
+          {
+            return AlertDialog(
+              title: Text('אנא בחר סוג חברה ותאריך', textDirection: TextDirection.rtl,),
+              actions: [
+                Text('בחר חברה', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 15),),
+                DropdownButton<String>(
+                  focusColor: Colors.white,
+                  value: selectedCompany,
+                  style: TextStyle(color: Colors.white),
+                  iconEnabledColor: Colors.black,
+                  items: _companies.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value, style: TextStyle(color: Colors.black),),
+                    );
+                  }).toList(),
+                  hint: Text(
+                    "בחר חברה",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  onChanged: (String value) {
+                    setState(() {
+                      selectedCompany = value;
+                    });
+                  },
+                ),
+                Text('בחר תאריך התחלה', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 15),),
+                DropdownButton<String>(
+                  focusColor: Colors.white,
+                  value: startYear,
+                  style: TextStyle(color: Colors.white),
+                  iconEnabledColor: Colors.black,
+                  items: _startYears.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value, style: TextStyle(color: Colors.black),),
+                    );
+                  }).toList(),
+                  hint: Text(
+                    "תאריך התחלה",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  onChanged: (String value) {
+                    setState(() {
+                      startYear = value;
+                    });
+                  },
+                ),
+                Text('בחר תאריך סיום', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 15),),
+                DropdownButton<String>(
+                  focusColor: Colors.white,
+                  value: endYear,
+                  style: TextStyle(color: Colors.white),
+                  iconEnabledColor: Colors.black,
+                  items: _endYears.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value, style: TextStyle(color: Colors.black),),
+                    );
+                  }).toList(),
+                  hint: Text(
+                    "תאריך סיום",
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  onChanged: (String value) {
+                    setState(() {
+                      endYear = value;
+                    });
+                  },
+                ),
+                Row(
+                  children: [
+                    TextButton(
+                        onPressed: () async {
+                          Navigator.pop(context);
+                          await lineStatisticCalc(
+                              startYear, endYear, selectedCompany);
+                        },
+                        child: Text('חיפוש')),
+                    TextButton(onPressed: () {
+                      Navigator.pop(context);
+                    }, child: Text("ביטול")),
+                  ],
+                ),
+              ],
+
+            );
+          });
+        });
+  }
+
+  getChartType() {
+    if (statisticType == 'pie')
+      return pieChartBody();
+    if (statisticType == 'line')
+      return lineChartBody();
+  }
 
 
 }

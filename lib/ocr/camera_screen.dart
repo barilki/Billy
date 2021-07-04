@@ -21,7 +21,7 @@ class _CameraScreenState extends State<CameraScreen> {
   void initState() {
     super.initState();
 
-    _controller = CameraController(cameras[0], ResolutionPreset.medium);
+    _controller = CameraController(cameras[0], ResolutionPreset.ultraHigh);
     _controller.initialize().then((_) {
       if (!mounted) {
         return;

@@ -1,4 +1,6 @@
+
 import 'package:flutter/material.dart';
+
 
 
 class PieData{
@@ -18,19 +20,24 @@ class PieData{
   }
 
   makeData() {
-    colors = [Colors.orange, Colors.blue, Colors.black, Colors.grey, Colors.pink, Colors.green];
+    colors = [
+      Colors.orange,
+      Colors.blue,
+      Colors.black,
+      Colors.grey,
+      Colors.pink,
+      Colors.green
+    ];
     companyName = ['חברת חשמל', 'מים', 'גז', 'ארנונה', 'סלולר', 'כבלים'];
-    newData = [iec,water,gas,arnona,cellular,tv];
+    newData = [iec, water, gas, arnona, cellular, tv];
     if (iec.toString() != 'NaN') {
       for (var i = 0; i < newData.length; i++) {
         if (newData[i] != 0.0)
-          data += [Data(name: companyName[i], percent: newData[i], color: colors[i])];
+          data +=
+          [Data(name: companyName[i], percent: newData[i], color: colors[i])];
       }
     }
-    else
-      data = [Data()];
   }
-
 
 }
 

@@ -75,9 +75,7 @@ class _DetailScreenState extends State<DetailScreen> {
             recognizedText = visionText.text;
           });
         }
-    //log(recognizedText);
-    //getDetails();
-    await strReg(recognizedText);
+    log(recognizedText);
     }
 
   //Regex getting string

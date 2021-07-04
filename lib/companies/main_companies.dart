@@ -10,6 +10,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -57,11 +58,12 @@ class _MainCompaniesState extends State<MainCompanies> {
             Row(
               children: [
                 SizedBox(
-                  width: 130,
+                  width: 170,
                   height: 40,
                   child: TextField(
                     textAlign: TextAlign.center,
                     keyboardType: TextInputType.datetime,
+                    inputFormatters: [LengthLimitingTextInputFormatter(10)],
                     decoration: new InputDecoration(
                         border: new OutlineInputBorder(
                           borderRadius: const BorderRadius.all(
@@ -140,6 +142,13 @@ class _MainCompaniesState extends State<MainCompanies> {
               onTap: () async {
                 aboutUs(context);
               }),
+          SpeedDialChild(
+              child: Icon(Icons.help),
+              backgroundColor: Colors.blueGrey,
+              label: "מדריך למשתמש",
+              onTap: () async {
+                aboutUs(context);
+              }),
         ],
       ),
     );
@@ -192,6 +201,7 @@ class _MainCompaniesState extends State<MainCompanies> {
                         InputDecoration(
                             hintText: "(dd/mm/yyyy) :תאריך"),
                         textAlign: TextAlign.right,
+                        inputFormatters: [LengthLimitingTextInputFormatter(10)],
                       ),
                       TextFormField(
                         validator: (value) {
@@ -200,12 +210,13 @@ class _MainCompaniesState extends State<MainCompanies> {
                           invoiceDueDate = value;
                           return regExp.hasMatch(value)
                               ? null
-                              : "שדה שגוי";
+                              : "שדה";
                         },
                         decoration:
                         InputDecoration(
                             hintText: "(dd/mm/yyyy) :תאריך פירעון"),
                         textAlign: TextAlign.right,
+                        inputFormatters: [LengthLimitingTextInputFormatter(10)],
                       ),
                       TextFormField(
                         maxLength: 5,
@@ -294,8 +305,8 @@ class _MainCompaniesState extends State<MainCompanies> {
     )..show();
   }
 
-//Upload photo to storage from manual add
-photoStorage() async {
+  //Upload photo to storage from manual add
+  photoStorage() async {
   if (_pickedImage != null) {
     String comp = widget.companyName;
     String userNew = user.uid;
@@ -308,8 +319,8 @@ photoStorage() async {
   }
 }
 
-// get user choice from filter list
-void choiceAction(String choice) {
+  // get user choice from filter list
+  void choiceAction(String choice) {
   if (choice == 'מספר חשבונית') {
     sortBy = 'invoiceID';
   } else if (choice == 'תאריך') {
