@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:web_scraper/web_scraper.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'companies.dart';
 
 class Scraping extends StatefulWidget {
@@ -20,13 +19,30 @@ class _ScrapingState extends State<Scraping> {
   Widget build(BuildContext context) {
     final companyThumbnail = new Container(
       margin: new EdgeInsets.symmetric(
-          vertical: 16.0
+          vertical: 30
       ),
       alignment: FractionalOffset.centerLeft,
       child: Image.asset(
         widget.company.image,
         width: 92.0,
         height: 92.0,
+      ),
+    );
+
+    final joinText = new Container(
+      margin: new EdgeInsets.symmetric(
+          vertical: 3,
+        horizontal: 49,
+      ),
+      alignment: FractionalOffset.bottomLeft,
+      child: GestureDetector(
+        onTap: (){
+        _callNumber();
+        },
+        child: Row(children: [
+          new Icon(Icons.call,size: 18,),
+          new Text("להצטרפות", style: TextStyle(color: Colors.black87, fontSize: 11, fontWeight: FontWeight.w600)),
+        ],),
       ),
     );
 
@@ -46,16 +62,6 @@ class _ScrapingState extends State<Scraping> {
         fontSize: 18.0,
         fontWeight: FontWeight.w600
     );
-
-    Widget _planetValue({String value, String image}) {
-      return new Row(
-          children: <Widget>[
-            new Image.asset(image, height: 12.0),
-            new Container(width: 8.0),
-            new Text("test", style: regularTextStyle),
-          ]
-      );
-    }
 
 
     final planetCardContent = Container(
@@ -117,9 +123,19 @@ class _ScrapingState extends State<Scraping> {
           children: <Widget>[
             planetCard,
             companyThumbnail,
+            joinText,
           ],
         )
     );
+  }
+
+  void _callNumber() async {
+    String url = "tel://" + widget.company.phone;
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not call $widget.company.phone';
+    }
   }
 
 

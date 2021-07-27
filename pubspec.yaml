@@ -73,7 +73,7 @@ dependencies:
   firebase_ml_vision: any
 
   #Camera package
-  camera: ^0.5.8+11
+  camera: ^0.7.0+4
 
   #intl package
   intl: ^0.16.1
@@ -85,7 +85,10 @@ dependencies:
   awesome_dialog: ^1.3.2
 
   #notifications
-  notifications: ^1.1.0
+  flutter_local_notifications: ^4.0.1+2
+
+  #image package
+  image: ^2.1.5
 
 
 

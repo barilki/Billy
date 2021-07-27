@@ -1,4 +1,3 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:billy/components/payment_page.dart';
 import 'package:billy/constants/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,14 +6,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:notifications/notifications.dart';
 
 class CompanyList extends StatelessWidget {
   final String companyName;
   final String searchResults;
   final String sortBy;
   static double count = 0; //sum for counting total invoices sum
-  static List<NotificationEvent> log = [];
   final user = FirebaseAuth.instance.currentUser;
   static final DateTime now = DateTime.now();
   static final DateFormat formatter = DateFormat('dd-MM-yyyy');

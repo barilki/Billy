@@ -5,6 +5,7 @@ class Company {
   final String priceAddress; //Price
   final String descAddress; //Description
   final String image;
+  final String phone;
 
-  const Company({this.name, this.plan, this.priceAddress, this.descAddress, this.image});
+  const Company({this.name, this.plan, this.priceAddress, this.descAddress, this.image, this.phone});
 }

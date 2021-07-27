@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:billy/icons/icon_content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'companies/main_companies.dart';
 import 'constants/constants.dart';
 import 'icons/reusable_icon.dart';
@@ -15,6 +16,16 @@ import 'login/log_page.dart';
 class BillyMainPage extends StatefulWidget {
   @override
   _BillyMainPageState createState() => _BillyMainPageState();
+
+  void init() {
+    final AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings('app_icon');
+
+    final InitializationSettings initializationSettings =
+    InitializationSettings(
+        android: initializationSettingsAndroid);
+  }
+
 
 }
 

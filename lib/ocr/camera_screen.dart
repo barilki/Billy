@@ -1,10 +1,12 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'detail_screen.dart';
 import 'main.dart';
+import 'package:image/image.dart' as img;
 
 
 class CameraScreen extends StatefulWidget {
@@ -16,6 +18,7 @@ class CameraScreen extends StatefulWidget {
 
 class _CameraScreenState extends State<CameraScreen> {
   CameraController _controller;
+  String _imagePath;
 
   @override
   void initState() {
@@ -23,6 +26,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
     _controller = CameraController(cameras[0], ResolutionPreset.ultraHigh);
     _controller.initialize().then((_) {
+      //_controller.lockCaptureOrientation(DeviceOrientation.portraitUp);
       if (!mounted) {
         return;
       }
@@ -37,28 +41,13 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   Future<String> _takePicture() async {
+    String imagePath;
 
     // Checking whether the controller is initialized
     if (!_controller.value.isInitialized) {
       print("Controller is not initialized");
       return null;
     }
-
-    // Formatting Date and Time
-    String dateTime = DateFormat.yMMMd()
-        .addPattern('-')
-        .add_Hms()
-        .format(DateTime.now())
-        .toString();
-
-    String formattedDateTime = dateTime.replaceAll(' ', '');
-    print("Formatted: $formattedDateTime");
-
-    // Retrieving the path for saving an image
-    final Directory appDocDir = await getApplicationDocumentsDirectory();
-    final String visionDir = '${appDocDir.path}/Photos/Vision\ Images';
-    await Directory(visionDir).create(recursive: true);
-    final String imagePath = '$visionDir/image_$formattedDateTime.jpg';
 
     // Checking whether the picture is being taken
     // to prevent execution of the function again
@@ -68,10 +57,13 @@ class _CameraScreenState extends State<CameraScreen> {
       return null;
     }
 
+
     try {
       // Captures the image and saves it to the
       // provided path
-      await _controller.takePicture(imagePath);
+      final XFile picture = await _controller.takePicture();
+      imagePath = picture.path;
+      picture.saveTo(imagePath);
     } on CameraException catch (e) {
       print("Camera Exception: $e");
       return null;
@@ -105,10 +97,23 @@ class _CameraScreenState extends State<CameraScreen> {
                 onPressed: () async {
                   await _takePicture().then((String path) {
                     if (path != null) {
+                      img.Image image = img.decodeJpg(File(path).readAsBytesSync());
+                      print("Read image from file and made a img.Image object");
+                      print(image.getBytes());
+                      image = img.grayscale(image);
+                      image = img.gaussianBlur(image, 2);
+                      image = img.copyResize(image, height:3508 , width: 2480);
+                      image = img.contrast(image, 140);
+                      image = img.brightness(image, 41);
+                      print("Grayscaled");
+                      final toBeSavedImage = img.encodePng(image);
+                      print("Converted image to bytes");
+                      File(path).writeAsBytesSync(toBeSavedImage);
+                      _imagePath = path;
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => DetailScreen(imagePath: path, companyName: widget.title)
+                          builder: (context) => DetailScreen(imagePath: _imagePath, companyName: widget.title)
                         ),
                       );
                     }
@@ -128,4 +133,3 @@ class _CameraScreenState extends State<CameraScreen> {
     );
   }
 }
-

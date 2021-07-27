@@ -3,7 +3,7 @@ import 'package:billy/scraper/scraping.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:web_scraper/web_scraper.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import 'companies.dart';
 
 // void main() => runApp(MainScraping());
@@ -65,29 +65,29 @@ class _MainScrapingState extends State<MainScraping> {
     super.initState();
     if (widget.companyType == 'Cellular' ) {
       scrap('hotMobile', 'hotmobile.png', 'https://www.haboreret.co.il',
-          '/הוט-מובייל/');
-      scrap('Partner', 'partner.png', 'https://www.haboreret.co.il', '/פרטנר/');
+          '/הוט-מובייל/', '1-800-800-053');
+      scrap('Partner', 'partner.png', 'https://www.haboreret.co.il', '/פרטנר/', '1-800-800-054');
       scrap('Pelephone', 'pelephone.png', 'https://www.haboreret.co.il',
-          '/פלאפון/');
-      scrap('Cellcom', 'Cellcom.png', 'https://www.haboreret.co.il', '/סלקום/');
+          '/פלאפון/', '1-800-050-050');
+      scrap('Cellcom', 'Cellcom.png', 'https://www.haboreret.co.il', '/סלקום/', '1-800-052-052');
       scrap('GolanTelecom', 'GolanTelecom.png', 'https://www.haboreret.co.il',
-          '/גולן-טלקום/');
+          '/גולן-טלקום/', '1-800-016-058');
       scrap(
-          '012', 'GolanTelecom.png', 'https://www.haboreret.co.il', '/012-2/');
+          '012', '012_mobile.png', 'https://www.haboreret.co.il', '/012-2/', '');
     }
     if(widget.companyType == 'Tv'){
-      scrap('Hot', 'hot.png', 'https://www.haboreret.co.il', '/הוט/');
-      scrap('Yes', 'yes.png', 'https://www.haboreret.co.il', '/yes/');
-      scrap('Cellcom TV', 'cellcomtv.png', 'https://www.haboreret.co.il', '/סלקום-tv/');
-      scrap('Sting TV', 'stingtv.png', 'https://www.haboreret.co.il', '/סטינג-טיוי/');
-      scrap('Partner TV', 'partnertv.png', 'https://www.haboreret.co.il', '/פרטנר-tv/');
+      scrap('Hot', 'hot.png', 'https://www.haboreret.co.il', '/הוט/', '1-801-700-700');
+      scrap('Yes', 'yes.png', 'https://www.haboreret.co.il', '/yes/', '1-800-20-8000');
+      scrap('Cellcom TV', 'cellcomtv.png', 'https://www.haboreret.co.il', '/סלקום-tv/', '1-800-071-071');
+      scrap('Sting TV', 'stingtv.png', 'https://www.haboreret.co.il', '/סטינג-טיוי/', '*2080');
+      scrap('Partner TV', 'partnertv.png', 'https://www.haboreret.co.il', '/פרטנר-tv/', '1-800-800-054');
 
     }
 
   }
 
   //Web data extraction function (scraping)
-  void scrap(String companyName, String image, String url, String path) async {
+  void scrap(String companyName, String image, String url, String path, String phoneNumber) async {
     final webScraper = WebScraper(url);
 
     if (await webScraper.loadWebPage(path)) {
@@ -106,7 +106,9 @@ class _MainScrapingState extends State<MainScraping> {
               plan: plan[i]['title'],
               priceAddress: price[i]['title'],
               descAddress: aboutPlan[i]['title'],
-              image: 'images/$image'));
+              image: 'images/$image',
+              phone: phoneNumber,));
+
         });
       }
     }
