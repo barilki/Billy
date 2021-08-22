@@ -39,6 +39,21 @@ Text kMainLogo = Text(
       ]),
 );
 
+Text kLoadingLogo = Text(
+  'מחשב נתונים..', textDirection: TextDirection.rtl,
+  style: GoogleFonts.sairaCondensed(
+      fontSize: 30.0,
+      color: Colors.white,
+      fontWeight: FontWeight.w200,
+      shadows: [
+        Shadow(
+          blurRadius: 7,
+          color: Colors.black.withOpacity(0.1),
+          offset: Offset(0, 5.0),
+        ),
+      ]),
+);
+
 Text kCompareLogo = Text('השוואת מחירים',
     style: GoogleFonts.rubik(
         fontSize: 40.0,

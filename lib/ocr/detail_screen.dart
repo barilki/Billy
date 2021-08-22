@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+import 'package:billy/constants/constants.dart';
 import 'package:image/image.dart' as imagePack;
 
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
@@ -158,62 +159,12 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _imageSize != null
-          ? Stack(
-              children: <Widget>[
-                Center(
-                  child: Container(
-                    width: double.maxFinite,
-                    color: Colors.black,
-                    child: AspectRatio(
-                      aspectRatio: _imageSize.aspectRatio,
-                      child: Image.file(
-                        File(path),
-                      ),
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Card(
-                    elevation: 8,
-                    color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Row(),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Text(
-                              "Identified text",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            height: 60,
-                            child: SingleChildScrollView(
-                              child: Text(
-                                recognizedText,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            )
-          : Container(
-              color: Colors.black,
+      body: Container(
+              color: kBackGroundColor,
               child: Center(
-                child: CircularProgressIndicator(),
+                child:Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                    children: [SizedBox(width: 30, height: 30, child: CircularProgressIndicator()), kLoadingLogo]),
               ),
             ),
     );

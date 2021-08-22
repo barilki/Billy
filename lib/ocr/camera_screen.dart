@@ -86,7 +86,6 @@ class _CameraScreenState extends State<CameraScreen> {
     // to prevent scaling down, invert the value
     if (scale < 1) scale = 1 / scale;
     return MaterialApp(
-      initialRoute: '/camera',
       home: Scaffold(
         body: _controller.value.isInitialized
             ? Stack(
@@ -119,10 +118,6 @@ class _CameraScreenState extends State<CameraScreen> {
                       await _takePicture().then((String path) {
                         if (path != null) {
                           img.Image image = img.decodeJpg(File(path).readAsBytesSync());
-                          int height = image.height;
-                          int width = image.width;
-                          print("HEIGHT: " + height.toString());
-                          print("WIDTH: " + width.toString());
                           print("Read image from file and made a img.Image object");
                           print(image.getBytes());
                           image = img.grayscale(image);
