@@ -22,17 +22,7 @@ class _MainOcrState extends State<MainOcr> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(backgroundColor: kBackGroundColor, elevation: 0, title: Text(widget.companyName)),
-      body: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        home: CameraScreen(title: widget.companyName),
-      ),
-    );
+    return Scaffold(body: CameraScreen(title: widget.companyName));
   }
 
 
@@ -57,6 +47,7 @@ class _MainOcrState extends State<MainOcr> {
 
     });
   }
+
 
 
 

@@ -44,112 +44,119 @@ class _MainCompaniesState extends State<MainCompanies> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: kBackGroundColor,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text(widget.companyName,
-                style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
-            Spacer(
-              flex: 1,
-            ),
-            Row(
-              children: [
-                SizedBox(
-                  width: 170,
-                  height: 40,
-                  child: TextField(
-                    textAlign: TextAlign.center,
-                    keyboardType: TextInputType.datetime,
-                    inputFormatters: [LengthLimitingTextInputFormatter(10)],
-                    decoration: new InputDecoration(
-                        border: new OutlineInputBorder(
-                          borderRadius: const BorderRadius.all(
-                            const Radius.circular(10.0),
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: kBackGroundColor,
+          leading: new IconButton(
+              icon: new Icon(Icons.arrow_back),
+              onPressed: (){Navigator.pop(context,true);}
+          ),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(widget.companyName,
+                  style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
+              Spacer(
+                flex: 1,
+              ),
+              Row(
+                children: [
+                  SizedBox(
+                    width: 170,
+                    height: 40,
+                    child: TextField(
+                      textAlign: TextAlign.center,
+                      keyboardType: TextInputType.datetime,
+                      inputFormatters: [LengthLimitingTextInputFormatter(10)],
+                      decoration: new InputDecoration(
+                          border: new OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              const Radius.circular(10.0),
+                            ),
                           ),
-                        ),
-                        filled: true,
-                        hintStyle: new TextStyle(color: Colors.grey[800]),
-                        hintText: "חיפוש",
-                        prefixIcon: Icon(Icons.search, size: 25),
-                        fillColor: Colors.white70),
-                    onChanged: (val) {
-                      setState(() {
-                        searchInput = val;
-                      });
-                    },
+                          filled: true,
+                          hintStyle: new TextStyle(color: Colors.grey[800]),
+                          hintText: "חיפוש",
+                          prefixIcon: Icon(Icons.search, size: 25),
+                          fillColor: Colors.white70),
+                      onChanged: (val) {
+                        setState(() {
+                          searchInput = val;
+                        });
+                      },
+                    ),
                   ),
-                ),
-                PopupMenuButton<String>(
-                  icon: Icon(Icons.filter_list),
-                  onSelected: choiceAction,
-                  itemBuilder: (BuildContext context) {
-                    return choices.map((String choice) {
-                      return PopupMenuItem<String>(
-                        value: choice,
-                        child: Text(choice),
-                      );
-                    }).toList();
-                  },
-                )
-              ],
-            )
+                  PopupMenuButton<String>(
+                    icon: Icon(Icons.filter_list),
+                    onSelected: choiceAction,
+                    itemBuilder: (BuildContext context) {
+                      return choices.map((String choice) {
+                        return PopupMenuItem<String>(
+                          value: choice,
+                          child: Text(choice),
+                        );
+                      }).toList();
+                    },
+                  )
+                ],
+              )
+            ],
+          ),
+        ),
+        body: CompanyList(
+            companyName: widget.companyName,
+            searchResults: searchInput,
+            sortBy: sortBy),
+        floatingActionButton: SpeedDial(
+          backgroundColor: Colors.red,
+          closeManually: true,
+          child: Icon(Icons.add),
+          children: [
+            SpeedDialChild(
+              child: Icon(Icons.camera),
+              backgroundColor: Colors.green,
+              label: "העלאת תמונה",
+              onTap: () async {
+                Navigator.of(context, rootNavigator: true);
+                await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            MainOcr(companyName: widget.companyName)));
+              },
+            ),
+            SpeedDialChild(
+                child: Icon(Icons.assignment_rounded),
+                backgroundColor: Colors.black,
+                label: "הוספה ידנית",
+                onTap: () async {
+                  await showInformationDialog(context);
+                }),
+            SpeedDialChild(
+                child: Icon(Icons.pie_chart),
+                backgroundColor: Colors.blue,
+                label: "סטטיסטיקה",
+                onTap: () async {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => PieChartPage()));
+                }),
+            SpeedDialChild(
+                child: Icon(Icons.details),
+                backgroundColor: Colors.blueGrey,
+                label: "עלינו",
+                onTap: () async {
+                  aboutUs(context);
+                }),
+            SpeedDialChild(
+                child: Icon(Icons.help),
+                backgroundColor: Colors.blueGrey,
+                label: "מדריך למשתמש",
+                onTap: () async {
+                  aboutUs(context);
+                }),
           ],
         ),
-      ),
-      body: CompanyList(
-          companyName: widget.companyName,
-          searchResults: searchInput,
-          sortBy: sortBy),
-      floatingActionButton: SpeedDial(
-        backgroundColor: Colors.red,
-        closeManually: true,
-        child: Icon(Icons.add),
-        children: [
-          SpeedDialChild(
-            child: Icon(Icons.camera),
-            backgroundColor: Colors.green,
-            label: "העלאת תמונה",
-            onTap: () async {
-              await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          MainOcr(companyName: widget.companyName)));
-            },
-          ),
-          SpeedDialChild(
-              child: Icon(Icons.assignment_rounded),
-              backgroundColor: Colors.black,
-              label: "הוספה ידנית",
-              onTap: () async {
-                await showInformationDialog(context);
-              }),
-          SpeedDialChild(
-              child: Icon(Icons.pie_chart),
-              backgroundColor: Colors.blue,
-              label: "סטטיסטיקה",
-              onTap: () async {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => PieChartPage()));
-              }),
-          SpeedDialChild(
-              child: Icon(Icons.details),
-              backgroundColor: Colors.blueGrey,
-              label: "עלינו",
-              onTap: () async {
-                aboutUs(context);
-              }),
-          SpeedDialChild(
-              child: Icon(Icons.help),
-              backgroundColor: Colors.blueGrey,
-              label: "מדריך למשתמש",
-              onTap: () async {
-                aboutUs(context);
-              }),
-        ],
       ),
     );
   }

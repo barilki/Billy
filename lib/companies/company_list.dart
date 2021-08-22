@@ -5,7 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as intl;
+import 'dart:ui';
 
 class CompanyList extends StatelessWidget {
   final String companyName;
@@ -14,7 +15,7 @@ class CompanyList extends StatelessWidget {
   static double count = 0; //sum for counting total invoices sum
   final user = FirebaseAuth.instance.currentUser;
   static final DateTime now = DateTime.now();
-  static final DateFormat formatter = DateFormat('dd-MM-yyyy');
+  static final intl.DateFormat formatter = intl.DateFormat('dd-MM-yyyy');
   final String formatted = formatter.format(now);
 
   CompanyList({this.companyName, this.searchResults, this.sortBy});
@@ -48,66 +49,84 @@ class CompanyList extends StatelessWidget {
               body: ListView(
                 padding: EdgeInsets.all(1.0),
                 children: snapshot.data.docs.map((document) {
-                  return Card(
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: ListTile(
-                      title: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("תאריך: " + document.data()['invoiceDate'],
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,fontSize: 13)),
-                          Text("תאריך פירעון: " + document.data()['invoiceDueDate'],
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold,fontSize: 13)),
-                        ],
+                  return Container(
+                    height: 80,
+                    child: Card(
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
                       ),
-                      subtitle: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("מספר חשבונית: " + document.data()['invoiceID'],
-                              style: TextStyle(
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.bold,fontSize: 13)),
-                          SizedBox(width: 5),
-                          Text("סכום: " + document.data()['invoiceSum'] + '₪',
-                              style: TextStyle(
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.bold,fontSize: 13)),
-                        ],
-                      ),
-                      // On press delete button, delete document from list view and database
-                      trailing: IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () async {
-                          deleteInvoice(context, document);
+                      child: ListTile(
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Row(
+                              children: [
+                                Text("סכום: " + document.data()['invoiceSum'] + '₪',
+                                    style: TextStyle(
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13)),
+
+                              ],
+                            ),
+                            Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+                            children: [
+                              Text("תאריך: " + document.data()['invoiceDate'],
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13)),
+                              Text(
+                                  "תאריך פירעון: " +
+                                      document.data()['invoiceDueDate'],
+                                  style: TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13)),
+                              Text("מספר חשבונית: " + document.data()['invoiceID'],
+                                  style: TextStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13)),
+                            ],
+                          ),
+                        ]
+                        ),
+                        // On press delete button, delete document from list view and database
+                        trailing: IconButton(
+                            alignment: Alignment.centerRight,
+                            icon: Icon(Icons.image),
+                            onPressed: () async {
+                              String url = await document.data()['invoiceUrl'];
+                              if (url != null) {
+                                await urlPhoto(context, url);
+                              }
+                            },
+                            color: Colors.orange,
+                          ),
+
+                        // On long press navigate to payment page
+                        onLongPress: () async {
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      PaymentPage(companyName)));
                         },
-                        color: Colors.red,
+                        leading: IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () async {
+                              deleteInvoice(context, document);
+                            },
+                            color: Colors.red,
+                          ),
+
+                        horizontalTitleGap: 10.0,
                       ),
-                      // On long press navigate to payment page
-                      onLongPress: () async {
-                        await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    PaymentPage(companyName)));
-                      },
-                      leading: IconButton(
-                        icon: Icon(Icons.image),
-                        onPressed: () async {
-                          String url = await document.data()['invoiceUrl'];
-                          if (url != null) {
-                            await urlPhoto(context, url);
-                          }
-                        },
-                        color: Colors.orange,
-                      ),
-                      horizontalTitleGap: 10.0,
                     ),
                   );
                 }).toList(),
@@ -122,29 +141,32 @@ class CompanyList extends StatelessWidget {
     showGeneralDialog(
         context: context,
         barrierDismissible: true,
-        barrierLabel: MaterialLocalizations.of(context)
-            .modalBarrierDismissLabel,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
         barrierColor: Colors.black45,
         transitionDuration: const Duration(milliseconds: 200),
-        pageBuilder: (BuildContext buildContext,
-            Animation animation,
+        pageBuilder: (BuildContext buildContext, Animation animation,
             Animation secondaryAnimation) {
           return Center(
             child: Container(
               width: MediaQuery.of(context).size.width - 10,
-              height: MediaQuery.of(context).size.height -  80,
+              height: MediaQuery.of(context).size.height - 80,
               padding: EdgeInsets.all(20),
               color: Colors.white,
               child: Column(
                 children: [
-                  Image.network(url,height: 700, width: 700,fit: BoxFit.fill,),
+                  Image.network(
+                    url,
+                    height: 700,
+                    width: 700,
+                    fit: BoxFit.fill,
+                  ),
                 ],
               ),
             ),
           );
         });
   }
-  
 
   //delete invoice from firebase
   Future<void> deleteInvoice(BuildContext context, document) async {
@@ -152,32 +174,42 @@ class CompanyList extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return CupertinoAlertDialog(
-          content: Text('האם ברצונך למחוק את החשבונית?'),
+          content: Text('האם ברצונך למחוק את החשבונית?',
+              textDirection: TextDirection.rtl, style: TextStyle(fontSize: 16)),
           actions: <Widget>[
             CupertinoDialogAction(
-                child: Row(
-              children: [
-                TextButton(
-                    child: Text('כן'),
-                    onPressed: () async {
-                      Navigator.pop(context);
-                      await FirebaseFirestore.instance
-                          .collection('users')
-                          .doc(user.uid)
-                          .collection(companyName)
-                          .doc(document.id)
-                          .delete();
-                      FirebaseStorage.instance
-                          .refFromURL(document.data()['invoiceUrl'])
-                          .delete();
-                    }),
-                TextButton(
-                    child: Text('לא'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    }),
-              ],
-            ))
+                  child: GestureDetector(
+                    child: Container(
+                      decoration: BoxDecoration(
+                      ),
+                        child: Text("לא",style: TextStyle(fontSize: 16)),
+                    ),
+                    onTap: () {
+                      Navigator.of(context).pop(); // replace with your own functions
+                    },
+                  ),
+            ),
+
+            CupertinoDialogAction(
+                child: GestureDetector(
+                  child: Container(
+                      child: Text("כן",style: TextStyle(fontSize: 16)),
+                  ),
+                  onTap: () async{
+                    Navigator.pop(context);
+                    await FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(user.uid)
+                        .collection(companyName)
+                        .doc(document.id)
+                        .delete();
+                    FirebaseStorage.instance
+                        .refFromURL(document.data()['invoiceUrl'])
+                        .delete(); // replace with your own functions
+                  },
+                ),
+            )
+
           ],
         );
       },

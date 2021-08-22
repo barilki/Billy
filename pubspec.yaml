@@ -88,7 +88,8 @@ dependencies:
   flutter_local_notifications: ^4.0.1+2
 
   #image package
-  image: ^2.1.5
+  image: ^2.1.19
+
 
 
 

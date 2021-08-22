@@ -31,7 +31,7 @@ class OcrCompanies {
     @required this.endWordForID,
   });
 
-  //add current details to collection into firestore
+  //add current details to collection into Firestore
   Future<void> insertDetails() async {
     var user = FirebaseAuth.instance.currentUser;
     var uid = user.uid;
@@ -59,7 +59,7 @@ class OcrCompanies {
     return text.substring(startIndex + startWordForDate.length, endIndex);
   }
 
-  //return duevdate from invoice
+  //return due date from invoice
   Future<String> getDueDate() async {
     final startIndex = await text.indexOf(startWordForDate);
     final endIndex = await text.indexOf(endWordForDate, startIndex + startWordForDate.length);

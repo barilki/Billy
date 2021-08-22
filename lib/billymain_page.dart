@@ -66,7 +66,7 @@ class _BillyMainPageState extends State<BillyMainPage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  MainCompanies(companyName: 'חברת חשמל')));
+                                  MainCompanies(companyName: 'חשמל')));
                     },
                     colour: Colors.white,
                     cardChild: IconContent(img: 'electric.png'),

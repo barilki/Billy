@@ -86,10 +86,12 @@ class _DetailScreenState extends State<DetailScreen> {
 
   //Retrieving information according to the company required
   void getDetails() async {
-    if (widget.companyName == 'חברת חשמל') {
+    if (widget.companyName == 'חשמל') {
       OcrCompanies(
           companyName: widget.companyName,
+          pickedImage: File(path),
           text: recognizedText,
+          contextOcr: this.context,
           firstWordSum: 'לתשלום',
           lastWordSum: 'הודעות',
           firstWordBillNo: 'מקור ',
@@ -98,6 +100,52 @@ class _DetailScreenState extends State<DetailScreen> {
       lastWordDate: 'עד',
       firstWordExpDate: 'לשלם חשבון',
       lastWordExpDate: 'מבוצע');
+    }
+    if (widget.companyName == 'מים') {
+      OcrCompanies(
+          companyName: widget.companyName,
+          pickedImage: File(path),
+          text: recognizedText,
+          contextOcr: this.context,
+          firstWordSum: 'תאריך אחרון',
+          lastWordSum: 'בתקופה זו',
+          firstWordBillNo: 'מספר ספח',
+          lastWordBillNo: 'מספר ימים',
+          firstWordDate: 'כמה מים',
+          lastWordDate: 'כמות צריכה',
+          firstWordExpDate: 'אחרון לתשלום',
+          lastWordExpDate: 'בתקופה זו');
+    }
+    if (widget.companyName == 'גז') {
+      OcrCompanies(
+          companyName: widget.companyName,
+          pickedImage: File(path),
+          text: recognizedText,
+          contextOcr: this.context,
+          firstWordSum: 'סה"כ לתשלום',
+          lastWordSum: 'מחיר ממוצע משוקלל',
+          firstWordBillNo: 'חשבונית מס קבלה',
+          lastWordBillNo: 'שם הצרכן',
+          firstWordDate: 'מיקוד',
+          lastWordDate: 'מרכזיה',
+          firstWordExpDate: 'טלפון חירום',
+          lastWordExpDate: 'מועד אחרון');
+    }
+
+    if (widget.companyName == 'ארנונה') {
+      OcrCompanies(
+          companyName: widget.companyName,
+          pickedImage: File(path),
+          text: recognizedText,
+          contextOcr: this.context,
+          firstWordSum: 'מספר מסלקה',
+          lastWordSum: 'הוראות החוק',
+          firstWordBillNo: 'מספר מסלקה',
+          lastWordBillNo: 'החוק',
+          firstWordDate: 'ארנונה ואגרת שמירה',
+          lastWordDate: 'חשבון מיסים',
+          firstWordExpDate: 'לתשלום עד',
+          lastWordExpDate: 'הוראות');
     }
   }
 
