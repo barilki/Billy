@@ -184,7 +184,7 @@ class CompanyList extends StatelessWidget {
                       ),
                         child: Text("לא",style: TextStyle(fontSize: 16)),
                     ),
-                    onTap: () {
+                    onTap: () async{
                       Navigator.of(context).pop(); // replace with your own functions
                     },
                   ),
@@ -196,6 +196,7 @@ class CompanyList extends StatelessWidget {
                       child: Text("כן",style: TextStyle(fontSize: 16)),
                   ),
                   onTap: () async{
+
                     Navigator.pop(context);
                     await FirebaseFirestore.instance
                         .collection('users')

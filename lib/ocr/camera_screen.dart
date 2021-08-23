@@ -117,26 +117,10 @@ class _CameraScreenState extends State<CameraScreen> {
                     onPressed: () async {
                       await _takePicture().then((String path) {
                         if (path != null) {
-                          img.Image image = img.decodeJpg(File(path).readAsBytesSync());
-                          print("Read image from file and made a img.Image object");
-                          print(image.getBytes());
-                          image = img.grayscale(image);
-                          image = img.gaussianBlur(image, 2);
-                          //image = img.copyCrop(image,820, 150, 1700, 1826);
-                          image = img.copyCrop(image,780, 150, 1776, 1826);
-                          //image = img.copyResize(image, height:3508 , width: 2480);
-                          // image = img.copyRotate(image, 90);
-                          image = img.contrast(image, 160);
-                          // image = img.brightness(image, 25);
-                          print("Grayscaled");
-                          final toBeSavedImage = img.encodePng(image);
-                          print("Converted image to bytes");
-                          File(path).writeAsBytesSync(toBeSavedImage);
-                          _imagePath = path;
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DetailScreen(imagePath: _imagePath, companyName: widget.title)
+                              builder: (context) => DetailScreen(imagePath: path, companyName: widget.title)
                             ),
                           );
                         }

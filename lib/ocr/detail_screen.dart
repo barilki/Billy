@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:billy/constants/constants.dart';
-import 'package:image/image.dart' as imagePack;
+import 'package:flutter/scheduler.dart';
+import 'package:image/image.dart' as img;
 
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'ocr_companies.dart';
 
 class DetailScreen extends StatefulWidget {
@@ -19,12 +21,14 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  _DetailScreenState(this.path);
+  _DetailScreenState(this.pathBefore);
 
-  final String path;
+  final String pathBefore;
 
   Size _imageSize;
   String recognizedText = "loading..";
+  String pathAfter;
+  String pathImageWithColors = '/data/user/0/com.example.billy/cache/color.jpg';
 
   Future<void> _getImageSize(File imageFile) async {
     final Completer<Size> completer = Completer<Size>();
@@ -48,8 +52,32 @@ class _DetailScreenState extends State<DetailScreen> {
     });
   }
 
+  //Convert image to Grayscale
+  void grayScaleImage(){
+    //Get original image with color and copy to another path
+    File(pathBefore).copy('/data/user/0/com.example.billy/cache/color.jpg');
+    print("PATH:" + pathBefore);
+    img.Image image = img.decodeJpg(File(pathBefore).readAsBytesSync());
+    print("Read image from file and made a img.Image object");
+    print(image.getBytes());
+    image = img.grayscale(image);
+    image = img.gaussianBlur(image, 2);
+    //image = img.copyCrop(image,820, 150, 1700, 1826);
+    image = img.copyCrop(image,780, 150, 1776, 1826);
+    //image = img.copyResize(image, height:3508 , width: 2480);
+    // image = img.copyRotate(image, 90);
+    image = img.contrast(image, 160);
+    // image = img.brightness(image, 25);
+    print("Grayscaled");
+    final toBeSavedImage = img.encodePng(image);
+    print("Converted image to bytes");
+    File(pathBefore).writeAsBytesSync(toBeSavedImage);
+    pathAfter = pathBefore;
+
+  }
+
   void _initializeVision() async {
-    final File imageFile = File(path);
+    final File imageFile = File(pathAfter);
 
     if (imageFile != null) {
       await _getImageSize(imageFile);
@@ -77,20 +105,12 @@ class _DetailScreenState extends State<DetailScreen> {
     getDetails();
   }
 
-  // //Regex getting string
-  // strReg(String str) async {
-  //   String newStr = str.replaceAll(RegExp('[a-zA-Z!-,:-@[-`{-~]'), '');
-  //   log(newStr);
-  //   //await SharedPrefs.setKey('filteredTxt', newStr);
-  //   //getDetails();
-  // }
-
   //Retrieving information according to the company required
   void getDetails() async {
     if (widget.companyName == 'חשמל') {
       OcrCompanies(
           companyName: widget.companyName,
-          pickedImage: File(path),
+          pickedImage: File(pathAfter),
           text: recognizedText,
           contextOcr: this.context,
           firstWordSum: 'לתשלום',
@@ -105,7 +125,7 @@ class _DetailScreenState extends State<DetailScreen> {
     if (widget.companyName == 'מים') {
       OcrCompanies(
           companyName: widget.companyName,
-          pickedImage: File(path),
+          pickedImage: File(pathAfter),
           text: recognizedText,
           contextOcr: this.context,
           firstWordSum: 'תאריך אחרון',
@@ -120,7 +140,7 @@ class _DetailScreenState extends State<DetailScreen> {
     if (widget.companyName == 'גז') {
       OcrCompanies(
           companyName: widget.companyName,
-          pickedImage: File(path),
+          pickedImage: File(pathAfter),
           text: recognizedText,
           contextOcr: this.context,
           firstWordSum: 'סה"כ לתשלום',
@@ -136,7 +156,7 @@ class _DetailScreenState extends State<DetailScreen> {
     if (widget.companyName == 'ארנונה') {
       OcrCompanies(
           companyName: widget.companyName,
-          pickedImage: File(path),
+          pickedImage: File(pathImageWithColors),
           text: recognizedText,
           contextOcr: this.context,
           firstWordSum: 'מספר מסלקה',
@@ -150,10 +170,18 @@ class _DetailScreenState extends State<DetailScreen> {
     }
   }
 
+  void imageWithColor() async{
+    Directory directory = await getApplicationDocumentsDirectory();
+    var path = directory.path;
+    await File(path).copy('/data/user/0/com.example.billy/cache/color.jpg');
+  }
+
   @override
   void initState() {
-    _initializeVision();
     super.initState();
+      grayScaleImage();
+      _initializeVision();
+
   }
 
   @override

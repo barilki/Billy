@@ -88,7 +88,10 @@ dependencies:
   flutter_local_notifications: ^4.0.1+2
 
   #image package
-  image: ^2.1.19
+  image: ^3.0.2
+
+  #firebase firebase messaging (Notifications)
+  firebase_messaging: 8.0.0-dev.8
 
 
 
