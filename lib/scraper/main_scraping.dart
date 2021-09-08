@@ -63,7 +63,7 @@ class _MainScrapingState extends State<MainScraping> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (widget.companyType == 'Cellular' ) {
+    if (widget.companyType == 'סלולר' ) {
       scrap('hotMobile', 'hotmobile.png', 'https://www.haboreret.co.il',
           '/הוט-מובייל/', '1-800-800-053');
       scrap('Partner', 'partner.png', 'https://www.haboreret.co.il', '/פרטנר/', '1-800-800-054');
@@ -75,7 +75,7 @@ class _MainScrapingState extends State<MainScraping> {
       scrap(
           '012', '012_mobile.png', 'https://www.haboreret.co.il', '/012-2/', '');
     }
-    if(widget.companyType == 'Tv'){
+    if(widget.companyType == 'טלוויזיה'){
       scrap('Hot', 'hot.png', 'https://www.haboreret.co.il', '/הוט/', '1-801-700-700');
       scrap('Yes', 'yes.png', 'https://www.haboreret.co.il', '/yes/', '1-800-20-8000');
       scrap('Cellcom TV', 'cellcomtv.png', 'https://www.haboreret.co.il', '/סלקום-tv/', '1-800-071-071');

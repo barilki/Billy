@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:billy/billymain_page.dart';
 import 'package:billy/chart/pie_chart_page.dart';
 import 'package:billy/companies/company_list.dart';
 import 'package:billy/constants/constants.dart';
@@ -50,7 +51,7 @@ class _MainCompaniesState extends State<MainCompanies> {
           backgroundColor: kBackGroundColor,
           leading: new IconButton(
               icon: new Icon(Icons.arrow_back),
-              onPressed: (){Navigator.pop(context,true);}
+              onPressed: (){Navigator.of(context).push(MaterialPageRoute(builder: (context) => BillyMainPage()));}
           ),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

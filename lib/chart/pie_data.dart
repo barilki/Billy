@@ -28,7 +28,7 @@ class PieData{
       Colors.pink,
       Colors.green
     ];
-    companyName = ['חברת חשמל', 'מים', 'גז', 'ארנונה', 'סלולר', 'כבלים'];
+    companyName = ['חשמל', 'מים', 'גז', 'ארנונה', 'סלולר', 'כבלים'];
     newData = [iec, water, gas, arnona, cellular, tv];
     if (iec.toString() != 'NaN') {
       for (var i = 0; i < newData.length; i++) {

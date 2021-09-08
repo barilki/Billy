@@ -26,7 +26,7 @@ class PieChartPageState extends State {
   var statisticType;
   static Map testMap = {};
   static Map newMap = {};
-  final List<String> _companies = ['חברת חשמל', 'מים', 'גז', 'ארנונה', 'סלולר', 'כבלים'].toList();
+  final List<String> _companies = ['חשמל', 'מים', 'גז', 'ארנונה', 'סלולר', 'כבלים'].toList();
   final List<String> _startYears = ['2000', '2001', '2002', '2003','2004', '2005', '2006', '2007','2008', '2009', '2010', '2011', '2012', '2013','2014', '2015', '2016', '2017', '2018', '2019','2020', '2021', '2022', '2023',].toList();
   final List<String> _endYears = ['2000', '2001', '2002', '2003','2004', '2005', '2006', '2007','2008', '2009', '2010', '2011', '2012', '2013','2014', '2015', '2016', '2017', '2018', '2019','2020', '2021', '2022', '2023',].toList();
 
@@ -86,7 +86,7 @@ class PieChartPageState extends State {
   //Calculate invoice sum for each company.
   Future<void> statCalc(String month, String year) async {
     total = 0.0;
-    iecSum = await calculateSum('חברת חשמל', month, year, total);
+    iecSum = await calculateSum('חשמל', month, year, total);
     waterSum = await calculateSum('מים', month, year, total);
     gasSum = await calculateSum('גז', month, year, total);
     arnonaSum = await calculateSum('ארנונה', month, year, total);

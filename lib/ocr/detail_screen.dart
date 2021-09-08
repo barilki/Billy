@@ -60,16 +60,12 @@ class _DetailScreenState extends State<DetailScreen> {
     img.Image image = img.decodeJpg(File(pathBefore).readAsBytesSync());
     print("Read image from file and made a img.Image object");
     print(image.getBytes());
-    image = img.grayscale(image);
-    image = img.gaussianBlur(image, 2);
-    //image = img.copyCrop(image,820, 150, 1700, 1826);
-    image = img.copyCrop(image,780, 150, 1776, 1826);
-    //image = img.copyResize(image, height:3508 , width: 2480);
-    // image = img.copyRotate(image, 90);
-    image = img.contrast(image, 160);
-    // image = img.brightness(image, 25);
+    var grayScale = img.grayscale(image);
+    var gaussianBlur = img.gaussianBlur(grayScale, 2);
+    var imageCrop = img.copyCrop(gaussianBlur,780, 150, 1776, 1826);
+    var contrast = img.contrast(imageCrop, 160);
     print("Grayscaled");
-    final toBeSavedImage = img.encodePng(image);
+    final toBeSavedImage = img.encodePng(contrast);
     print("Converted image to bytes");
     File(pathBefore).writeAsBytesSync(toBeSavedImage);
     pathAfter = pathBefore;
@@ -110,7 +106,7 @@ class _DetailScreenState extends State<DetailScreen> {
     if (widget.companyName == 'חשמל') {
       OcrCompanies(
           companyName: widget.companyName,
-          pickedImage: File(pathAfter),
+          pickedImage: File(pathImageWithColors),
           text: recognizedText,
           contextOcr: this.context,
           firstWordSum: 'לתשלום',
@@ -125,7 +121,7 @@ class _DetailScreenState extends State<DetailScreen> {
     if (widget.companyName == 'מים') {
       OcrCompanies(
           companyName: widget.companyName,
-          pickedImage: File(pathAfter),
+          pickedImage: File(pathImageWithColors),
           text: recognizedText,
           contextOcr: this.context,
           firstWordSum: 'תאריך אחרון',
@@ -140,7 +136,7 @@ class _DetailScreenState extends State<DetailScreen> {
     if (widget.companyName == 'גז') {
       OcrCompanies(
           companyName: widget.companyName,
-          pickedImage: File(pathAfter),
+          pickedImage: File(pathImageWithColors),
           text: recognizedText,
           contextOcr: this.context,
           firstWordSum: 'סה"כ לתשלום',

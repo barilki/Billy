@@ -1,0 +1,393 @@
+@startuml
+set namespaceSeparator ::
+
+class "billy::billymain_page.dart::BillyMainPage" {
+  +_BillyMainPageState* createState()
+  +void init()
+}
+
+class "billy::billymain_page.dart::_BillyMainPageState" {
+  -FirebaseAuth* _auth
+  +Widget* build()
+}
+
+"billy::billymain_page.dart::_BillyMainPageState" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+
+class "billy::chart::graph.dart::BarChartSample3" {
+  +State<StatefulWidget*>* createState()
+}
+
+class "billy::chart::graph.dart::BarChartSample3State" {
+  +List<int*>* intList
+  +Widget* build()
+  +dynamic setValues()
+}
+
+class "billy::chart::indicators_widget.dart::IndicatorsWidget" {
+  +Widget* build()
+  +Widget* buildIndicator()
+}
+
+class "billy::chart::pie_chart_page.dart::PieChartPage" {
+  +State<StatefulWidget*>* createState()
+}
+
+class "billy::chart::pie_chart_page.dart::PieChartPageState" {
+  +double* iecSum
+  +double* waterSum
+  +double* gasSum
+  +double* arnonaSum
+  +double* cellularSum
+  +double* tvSum
+  {static} +double* percentIEC
+  {static} +double* percentWater
+  {static} +double* percentGas
+  {static} +double* percentArnona
+  {static} +double* percentCellular
+  {static} +double* percentTv
+  {static} +double* total
+  {static} +double* totalPerCompany
+  +String* selectedYear
+  +String* selectedMonth
+  +String* startYear
+  +String* endYear
+  +String* selectedCompany
+  +dynamic res
+  +dynamic statisticType
+  {static} +Map<dynamic, dynamic>* testMap
+  {static} +Map<dynamic, dynamic>* newMap
+  -List<String*>* _companies
+  -List<String*>* _startYears
+  -List<String*>* _endYears
+  +void initState()
+  +Widget* build()
+  +Future<void>* statCalc()
+  +Future<double*>* calculateSum()
+  +dynamic calculatePercent()
+  +dynamic datePicker()
+  +dynamic pieChartBody()
+  +dynamic lineChartBody()
+  +dynamic lineStatisticCalc()
+  +dynamic companyAndYearPicker()
+  +dynamic getChartType()
+}
+
+class "billy::chart::pie_data.dart::PieData" {
+  +double* iec
+  +double* water
+  +double* gas
+  +double* arnona
+  +double* cellular
+  +double* tv
+  +List<Data*>* data
+  +List<double*>* newData
+  +List<String*>* companyName
+  +List<Color*>* colors
+  {static} +int* count
+  +dynamic makeData()
+}
+
+class "billy::chart::pie_data.dart::Data" {
+  +String* name
+  +double* percent
+  +Color* color
+}
+
+"billy::chart::pie_data.dart::Data" o-- "dart::ui::Color"
+
+class "billy::companies::company_list.dart::CompanyList" {
+  +String* companyName
+  +String* searchResults
+  +String* sortBy
+  {static} +double* count
+  +User* user
+  {static} +DateTime* now
+  {static} +DateFormat* formatter
+  +String* formatted
+  +Widget* build()
+  +Future<void>* urlPhoto()
+  +Future<void>* deleteInvoice()
+}
+
+"billy::companies::company_list.dart::CompanyList" o-- "firebase_auth::firebase_auth.dart::User"
+"billy::companies::company_list.dart::CompanyList" o-- "intl::intl.dart::DateFormat"
+
+class "billy::companies::main_companies.dart::MainCompanies" {
+  +String* companyName
+  +String* text
+  +_MainCompaniesState* createState()
+}
+
+class "billy::companies::main_companies.dart::_MainCompaniesState" {
+  {static} +String* clientID
+  {static} +String* invoiceID
+  {static} +String* invoiceDate
+  {static} +String* invoiceSum
+  {static} +String* invoiceDueDate
+  +String* companyName
+  -GlobalKey<FormState*>* _formKey
+  +User* user
+  +String* searchInput
+  -File* _pickedImage
+  {static} +List<String*>* choices
+  +String* sortBy
+  +Widget* build()
+  +Future<Text*>* showInformationDialog()
+  +Future<void>* aboutUs()
+  +dynamic photoStorage()
+  +void choiceAction()
+}
+
+"billy::companies::main_companies.dart::_MainCompaniesState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"billy::companies::main_companies.dart::_MainCompaniesState" o-- "firebase_auth::firebase_auth.dart::User"
+"billy::companies::main_companies.dart::_MainCompaniesState" o-- "dart::io::File"
+
+class "billy::companies::ocr_companies.dart::OcrCompanies" {
+  +File* pickedImage
+  +String* companyName
+  +String* text
+  +String* startWordForSum
+  +String* endWordForSum
+  +String* startWordForDate
+  +String* endWordForDate
+  +String* startWordForDueDate
+  +String* endWordForDueDate
+  +String* startWordForID
+  +String* endWordForID
+  +Future<void>* insertDetails()
+  +Future<String*>* getSum()
+  +Future<String*>* getDate()
+  +Future<String*>* getDueDate()
+  +Future<String*>* getID()
+}
+
+"billy::companies::ocr_companies.dart::OcrCompanies" o-- "dart::io::File"
+
+class "billy::compare_page.dart::ComparePage" {
+  +_ComparePageState* createState()
+}
+
+class "billy::compare_page.dart::_ComparePageState" {
+  +Widget* build()
+}
+
+class "billy::components::payment_page.dart::PaymentPage" {
+  +String* companyName
+  +String* invoiceID
+  +String* invoiceSum
+  +List<String*>* siteList
+  +List<String*>* companies
+  +Widget* build()
+  +dynamic getPaymentSite()
+}
+
+class "billy::icons::icon_content.dart::IconContent" {
+  +String* img
+  +String* label
+  +Widget* build()
+}
+
+class "billy::icons::reusable_icon.dart::ReusableIcon" {
+  +Color* colour
+  +Widget* cardChild
+  +Function* onPress
+  +Widget* build()
+}
+
+"billy::icons::reusable_icon.dart::ReusableIcon" o-- "dart::ui::Color"
+"billy::icons::reusable_icon.dart::ReusableIcon" o-- "flutter::src::widgets::framework.dart::Widget"
+
+class "billy::icons::rounded_button.dart::RoundedButton" {
+  +Color* colour
+  +String* title
+  +Function* onPressed
+  +Color* fontColour
+  +Widget* build()
+}
+
+"billy::icons::rounded_button.dart::RoundedButton" o-- "dart::ui::Color"
+
+class "billy::login::auth_page.dart::AuthPage" {
+  +_AuthPageState* createState()
+}
+
+class "billy::login::auth_page.dart::_AuthPageState" {
+  +Widget* build()
+}
+
+class "billy::login::log_page.dart::LoginPage" {
+  {static} +String* id
+  +_LoginPageState* createState()
+}
+
+class "billy::login::log_page.dart::_LoginPageState" {
+  +bool* showSpinner
+  -GlobalKey<FormState*>* _formKey
+  -String* _email
+  -String* _password
+  -FirebaseAuth* _auth
+  +Widget* build()
+  +void showSpinnerFlag()
+}
+
+"billy::login::log_page.dart::_LoginPageState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"billy::login::log_page.dart::_LoginPageState" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+
+class "billy::login::register_page.dart::RegisterPage" {
+  +_RegisterPageState* createState()
+}
+
+class "billy::login::register_page.dart::_RegisterPageState" {
+  +bool* showSpinner
+  -String* _email
+  -String* _password
+  -String* _user
+  -FirebaseAuth* _auth
+  -GlobalKey<FormState*>* _formKey
+  +Widget* build()
+}
+
+"billy::login::register_page.dart::_RegisterPageState" o-- "firebase_auth::firebase_auth.dart::FirebaseAuth"
+"billy::login::register_page.dart::_RegisterPageState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+
+class "billy::main.dart::MyApp" {
+  +Widget* build()
+}
+
+class "billy::notification_service.dart::NotificationService" {
+  {static} -NotificationService* _notificationService
+  +FlutterLocalNotificationsPlugin* flutterLocalNotificationsPlugin
+}
+
+"billy::notification_service.dart::NotificationService" o-- "billy::notification_service.dart::NotificationService"
+"billy::notification_service.dart::NotificationService" o-- "flutter_local_notifications::src::flutter_local_notifications_plugin.dart::FlutterLocalNotificationsPlugin"
+
+class "billy::ocr::camera_screen.dart::CameraScreen" {
+  +String* title
+  +_CameraScreenState* createState()
+}
+
+class "billy::ocr::camera_screen.dart::_CameraScreenState" {
+  -CameraController* _controller
+  -String* _imagePath
+  +void initState()
+  +void dispose()
+  -Future<String*>* _takePicture()
+  +Widget* build()
+}
+
+"billy::ocr::camera_screen.dart::_CameraScreenState" o-- "camera::src::camera_controller.dart::CameraController"
+
+class "billy::ocr::detail_screen.dart::DetailScreen" {
+  +String* imagePath
+  +String* companyName
+  +_DetailScreenState* createState()
+}
+
+class "billy::ocr::detail_screen.dart::_DetailScreenState" {
+  +String* pathBefore
+  -Size* _imageSize
+  +String* recognizedText
+  +String* pathAfter
+  +String* pathImageWithColors
+  -Future<void>* _getImageSize()
+  +void grayScaleImage()
+  -void _initializeVision()
+  +void getDetails()
+  +void imageWithColor()
+  +void initState()
+  +Widget* build()
+}
+
+"billy::ocr::detail_screen.dart::_DetailScreenState" o-- "dart::ui::Size"
+
+class "billy::ocr::main.dart::MainOcr" {
+  +String* companyName
+  +_MainOcrState* createState()
+}
+
+class "billy::ocr::main.dart::_MainOcrState" {
+  +Widget* build()
+  +void initState()
+  +void openCamera()
+}
+
+class "billy::ocr::ocr_companies.dart::OcrCompanies" {
+  +File* pickedImage
+  +String* companyName
+  +String* text
+  +String* firstWordSum
+  +String* lastWordSum
+  +String* firstWordBillNo
+  +String* lastWordBillNo
+  +String* firstWordDate
+  +String* lastWordDate
+  +String* firstWordExpDate
+  +String* lastWordExpDate
+  +String* sum
+  +String* billNumber
+  +String* date
+  +String* expDate
+  +BuildContext* contextOcr
+  +String* validSum
+  +String* validSumPropertyTax
+  +String* validDate
+  +String* validDateGas
+  +String* validDatePropertyTax
+  +String* validBillNumber
+  +User* user
+  +Future<void>* insertDetails()
+  +dynamic photoStorage()
+  +Future<void>* getDataIEC()
+  +Future<void>* getDataWater()
+  +Future<void>* getDataGas()
+  +Future<void>* getDataPropertyTax()
+  +String* regEx()
+  +Iterable<String*>* regExLastMatch()
+  +String* filterText()
+  +bool* valid()
+  +AwesomeDialog* dialog()
+  +void errorMsg()
+}
+
+"billy::ocr::ocr_companies.dart::OcrCompanies" o-- "dart::io::File"
+"billy::ocr::ocr_companies.dart::OcrCompanies" o-- "flutter::src::widgets::framework.dart::BuildContext"
+"billy::ocr::ocr_companies.dart::OcrCompanies" o-- "firebase_auth::firebase_auth.dart::User"
+
+class "billy::scraper::companies.dart::Company" {
+  +String* name
+  +String* plan
+  +String* priceAddress
+  +String* descAddress
+  +String* image
+  +String* phone
+}
+
+class "billy::scraper::main_scraping.dart::MainScraping" {
+  +String* companyType
+  +_MainScrapingState* createState()
+}
+
+class "billy::scraper::main_scraping.dart::_MainScrapingState" {
+  +List<Company*>* company
+  +bool* isLoading
+  +Widget* build()
+  +void initState()
+  +void scrap()
+}
+
+class "billy::scraper::scraping.dart::Scraping" {
+  +Company* company
+  +List<Company*>* companies
+  +_ScrapingState* createState()
+}
+
+"billy::scraper::scraping.dart::Scraping" o-- "billy::scraper::companies.dart::Company"
+
+class "billy::scraper::scraping.dart::_ScrapingState" {
+  +Widget* build()
+  -void _callNumber()
+}
+
+
+@enduml

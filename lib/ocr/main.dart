@@ -22,7 +22,7 @@ class _MainOcrState extends State<MainOcr> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: CameraScreen(title: widget.companyName));
+    return MaterialApp(home: Scaffold(body: CameraScreen(title: widget.companyName)));
   }
 
 
@@ -44,7 +44,6 @@ class _MainOcrState extends State<MainOcr> {
       print(e);
     }
     setState(() {
-
     });
   }
 

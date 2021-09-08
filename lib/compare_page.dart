@@ -39,7 +39,7 @@ class _ComparePageState extends State<ComparePage> {
                     onPress: () async {
                       //aboutUs(context);
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => MainScraping(companyType: 'Tv')));
+                          MaterialPageRoute(builder: (context) => MainScraping(companyType: 'טלוויזיה')));
                     },
                     colour: Colors.white,
                     cardChild: IconContent(img: "tv.png"),
@@ -48,7 +48,7 @@ class _ComparePageState extends State<ComparePage> {
                     onPress: () async {
                       //aboutUs(context);
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => MainScraping(companyType: 'Cellular',)));
+                          MaterialPageRoute(builder: (context) => MainScraping(companyType: 'סלולר',)));
                     },
                     colour: Colors.white,
                     cardChild: IconContent(img: "cellular.png"),

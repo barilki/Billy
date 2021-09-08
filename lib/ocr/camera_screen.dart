@@ -1,3 +1,5 @@
+import 'package:billy/companies/main_companies.dart';
+import 'package:billy/constants/constants.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -5,10 +7,11 @@ import 'detail_screen.dart';
 import 'main.dart';
 import 'package:image/image.dart' as img;
 
-
 class CameraScreen extends StatefulWidget {
   final String title;
+
   CameraScreen({this.title});
+
   @override
   _CameraScreenState createState() => _CameraScreenState();
 }
@@ -20,7 +23,6 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   void initState() {
     super.initState();
-
     _controller = CameraController(cameras[0], ResolutionPreset.ultraHigh);
     _controller.setFocusMode(FocusMode.auto);
     _controller.setExposureMode(ExposureMode.auto);
@@ -31,7 +33,6 @@ class _CameraScreenState extends State<CameraScreen> {
       }
       setState(() {});
     });
-    
   }
 
   @override
@@ -57,18 +58,16 @@ class _CameraScreenState extends State<CameraScreen> {
       return null;
     }
 
-
     try {
+      // await Future.delayed(Duration(milliseconds: 200));
       // Captures the image and saves it to the
       // provided path
       final XFile picture = await _controller.takePicture();
       imagePath = picture.path;
-      picture.saveTo(imagePath);
+      // picture.saveTo(imagePath);
     } on CameraException catch (e) {
       print("Camera Exception: $e");
-      return null;
     }
-
     return imagePath;
   }
 
@@ -77,7 +76,6 @@ class _CameraScreenState extends State<CameraScreen> {
     var camera = _controller.value;
     // fetch screen size
     final size = MediaQuery.of(context).size;
-
     // calculate scale depending on screen and camera ratios
     // this is actually size.aspectRatio / (1 / camera.aspectRatio)
     // because camera preview size is received as landscape
@@ -85,60 +83,74 @@ class _CameraScreenState extends State<CameraScreen> {
     var scale = size.aspectRatio * camera.aspectRatio;
     // to prevent scaling down, invert the value
     if (scale < 1) scale = 1 / scale;
-    return MaterialApp(
-      home: Scaffold(
-        body: _controller.value.isInitialized
-            ? Stack(
-          children: <Widget>[
-        Transform.scale(
-        scale: scale,
-          child: Center(
-            child: CameraPreview(_controller),
-          ),
-        ),
-            Center(child: Container(
-              height: 630,
-              width: 400,
-              decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  border: Border.all(color: Colors.white, width: 2.0),
-                  borderRadius: BorderRadius.circular(5.0)),
-            )),
-            Padding(
-              padding: const EdgeInsets.all(40.0),
-              child: Container(
-                alignment: Alignment.bottomCenter,
-                child: SizedBox(
-                  width: 95,
-                  height: 60,
-                  child: ElevatedButton.icon(
-                    icon: Icon(Icons.camera),
-                    label: Text("צלם", style: TextStyle(fontSize: 20)),
-                    onPressed: () async {
-                      await _takePicture().then((String path) {
-                        if (path != null) {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailScreen(imagePath: path, companyName: widget.title)
-                            ),
-                          );
-                        }
-                      });
-                    },
+
+    return Scaffold(
+      backgroundColor: kBackGroundColor,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        leading: new IconButton(
+            icon: new Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) =>
+                      MainCompanies(companyName: widget.title)));
+            }),
+      ),
+      body: _controller.value.isInitialized
+          ? Stack(
+              children: <Widget>[
+                Transform.scale(
+                  scale: scale,
+                  child: Center(
+                    child: CameraPreview(_controller),
                   ),
                 ),
+                Center(
+                    child: Container(
+                  height: 630,
+                  width: 400,
+                  decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      border: Border.all(color: Colors.white, width: 2.0),
+                      borderRadius: BorderRadius.circular(5.0)),
+                )),
+                Padding(
+                  padding: const EdgeInsets.all(40.0),
+                  child: Container(
+                    alignment: Alignment.bottomCenter,
+                    child: SizedBox(
+                      width: 95,
+                      height: 60,
+                      child: ElevatedButton.icon(
+                        icon: Icon(Icons.camera),
+                        label: Text("צלם", style: TextStyle(fontSize: 20)),
+                        onPressed: () async {
+                          await _takePicture().then((String path) {
+                            if (path != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => DetailScreen(
+                                        imagePath: path,
+                                        companyName: widget.title)),
+                              );
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          : Container(
+              color: Colors.black,
+              child: Center(
+                child: CircularProgressIndicator(),
               ),
             ),
-          ],
-        )
-            : Container(
-          color: Colors.black,
-          child: Center(
-            child: CircularProgressIndicator(),
-          ),
-        ),
-      ),
     );
   }
 }

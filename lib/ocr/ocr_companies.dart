@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:awesome_dialog/awesome_dialog.dart';
@@ -263,13 +264,10 @@ class OcrCompanies {
     )..show();
   }
 
-  void errorMsg() async {
-    print("TEST");
-
-    //Display dialog if extract words process is unsuccessful
+  void errorMsg() {
     dialog();
     //Refresh camera page if extract words process is unsuccessful
-    Navigator.of(contextOcr)
-        .pushNamedAndRemoveUntil('/camera', (Route<dynamic> route) => true);
+    print("GREAT");
+    Navigator.pop(contextOcr);
   }
 }

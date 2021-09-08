@@ -8,7 +8,7 @@ class PaymentPage extends StatelessWidget {
   String invoiceID;
   String invoiceSum;
   List<String> siteList = [IEC,Watercompany,Gascompany,Arnonacompany,Cellularcompany,Tvcompany];
-  List<String> companies = ['IEC','Water company','Gas company','Arnona company','Cellular company','Tv company'];
+  List<String> companies = ['חשמל','מים','גז','ארנונה','סלולר','כבלים'];
   PaymentPage(this.companyName);
   @override
   Widget build(BuildContext context) {
