@@ -1,6 +1,7 @@
-import 'package:billy/billymain_page.dart';
+import 'package:billy/companies_page.dart';
 import 'package:billy/icons/rounded_button.dart';
 import 'package:billy/constants/constants.dart';
+import 'package:billy/main.dart';
 import 'package:billy/validation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                         await _auth.signInWithEmailAndPassword(
                             email: _email, password: _password);
                         Navigator.push(context, MaterialPageRoute(builder: (
-                            context) => BillyMainPage()));
+                            context) => Main()));
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'user-not-found') {
                           warningAlerts(context, 'דואר אלקטרוני לא נמצא');

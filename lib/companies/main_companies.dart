@@ -1,11 +1,12 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:billy/billymain_page.dart';
+import 'package:billy/companies_page.dart';
 import 'package:billy/chart/pie_chart_page.dart';
 import 'package:billy/companies/company_list.dart';
 import 'package:billy/constants/constants.dart';
 import 'package:billy/ocr/main.dart';
+import 'package:billy/user_guide/intro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,7 +16,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-
 
 class MainCompanies extends StatefulWidget {
   final String companyName;
@@ -42,22 +42,25 @@ class _MainCompaniesState extends State<MainCompanies> {
   ];
   String sortBy = "invoiceID";
 
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: kBackGroundColor,
           leading: new IconButton(
               icon: new Icon(Icons.arrow_back),
-              onPressed: (){Navigator.of(context).push(MaterialPageRoute(builder: (context) => BillyMainPage()));}
-          ),
+              onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => CompaniesPage()));
+              }),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(widget.companyName,
-                  style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
+                  style:
+                      TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold)),
               Spacer(
                 flex: 1,
               ),
@@ -154,7 +157,12 @@ class _MainCompaniesState extends State<MainCompanies> {
                 backgroundColor: Colors.blueGrey,
                 label: "מדריך למשתמש",
                 onTap: () async {
-                  aboutUs(context);
+                  Navigator.of(context, rootNavigator: true);
+                  await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              Intro()));
                 }),
           ],
         ),
@@ -180,8 +188,7 @@ class _MainCompaniesState extends State<MainCompanies> {
                           clientID = value;
                           return value.isNotEmpty ? null : "שדה שגוי";
                         },
-                        decoration:
-                        InputDecoration(hintText: " :מספר לקוח"),
+                        decoration: InputDecoration(hintText: " :מספר לקוח"),
                         keyboardType: TextInputType.number,
                         textAlign: TextAlign.right,
                       ),
@@ -191,37 +198,32 @@ class _MainCompaniesState extends State<MainCompanies> {
                           invoiceID = value;
                           return value.isNotEmpty ? null : "שדה שגוי";
                         },
-                        decoration:
-                        InputDecoration(hintText: " :מספר חשבונית"),
+                        decoration: InputDecoration(hintText: " :מספר חשבונית"),
                         keyboardType: TextInputType.number,
                         textAlign: TextAlign.right,
                       ),
                       TextFormField(
                         validator: (value) {
-                          String regForDate = '((0[1-9])|([1-2][0-9])|(3[0-1]))/((0[1-9])|(1[0-2]))/[0-9]{4}';
+                          String regForDate =
+                              '((0[1-9])|([1-2][0-9])|(3[0-1]))/((0[1-9])|(1[0-2]))/[0-9]{4}';
                           RegExp regExp = RegExp(regForDate);
                           invoiceDate = value;
-                          return regExp.hasMatch(value)
-                              ? null
-                              : "שדה שגוי";
+                          return regExp.hasMatch(value) ? null : "שדה שגוי";
                         },
                         decoration:
-                        InputDecoration(
-                            hintText: "(dd/mm/yyyy) :תאריך"),
+                            InputDecoration(hintText: "(dd/mm/yyyy) :תאריך"),
                         textAlign: TextAlign.right,
                         inputFormatters: [LengthLimitingTextInputFormatter(10)],
                       ),
                       TextFormField(
                         validator: (value) {
-                          String regForDate = '((0[1-9])|([1-2][0-9])|(3[0-1]))/((0[1-9])|(1[0-2]))/[0-9]{4}';
+                          String regForDate =
+                              '((0[1-9])|([1-2][0-9])|(3[0-1]))/((0[1-9])|(1[0-2]))/[0-9]{4}';
                           RegExp regExp = RegExp(regForDate);
                           invoiceDueDate = value;
-                          return regExp.hasMatch(value)
-                              ? null
-                              : "שדה";
+                          return regExp.hasMatch(value) ? null : "שדה";
                         },
-                        decoration:
-                        InputDecoration(
+                        decoration: InputDecoration(
                             hintText: "(dd/mm/yyyy) :תאריך פירעון"),
                         textAlign: TextAlign.right,
                         inputFormatters: [LengthLimitingTextInputFormatter(10)],
@@ -232,8 +234,7 @@ class _MainCompaniesState extends State<MainCompanies> {
                           invoiceSum = value;
                           return value.isNotEmpty ? null : "שדה שגוי";
                         },
-                        decoration: InputDecoration(
-                            hintText: " :סכום"),
+                        decoration: InputDecoration(hintText: " :סכום"),
                         keyboardType: TextInputType.number,
                         textAlign: TextAlign.right,
                       ),
@@ -245,7 +246,7 @@ class _MainCompaniesState extends State<MainCompanies> {
                     //Image picker from gallery
                     IconButton(
                         icon:
-                        Icon(Icons.upload_file, color: Colors.orangeAccent),
+                            Icon(Icons.upload_file, color: Colors.orangeAccent),
                         onPressed: () async {
                           _pickedImage = await ImagePicker.pickImage(
                               source: ImageSource.gallery);
@@ -253,7 +254,7 @@ class _MainCompaniesState extends State<MainCompanies> {
                     //Image picker from camera
                     IconButton(
                         icon:
-                        Icon(Icons.camera_alt, color: Colors.orangeAccent),
+                            Icon(Icons.camera_alt, color: Colors.orangeAccent),
                         onPressed: () async {
                           _pickedImage = await ImagePicker.pickImage(
                               source: ImageSource.camera);
@@ -306,7 +307,8 @@ class _MainCompaniesState extends State<MainCompanies> {
       headerAnimationLoop: false,
       animType: AnimType.BOTTOMSLIDE,
       title: 'עלינו',
-      desc: 'האפליקציה נוצרה ע"י שי מנשרוב ובר אילן קימברובסקי, לפרטים נוספים ניתן לפנות אלינו בדואר אלקטרוני: billy@gmail.com',
+      desc:
+          'האפליקציה נוצרה ע"י שי מנשרוב ובר אילן קימברובסקי, לפרטים נוספים ניתן לפנות אלינו בדואר אלקטרוני: billy@gmail.com',
       showCloseIcon: true,
       //btnCancelOnPress: () {},
       btnOkOnPress: () {},
@@ -315,30 +317,28 @@ class _MainCompaniesState extends State<MainCompanies> {
 
   //Upload photo to storage from manual add
   photoStorage() async {
-  if (_pickedImage != null) {
-    String comp = widget.companyName;
-    String userNew = user.uid;
-    String path = "$userNew/$comp/$invoiceID.jpeg"; //String of path
-    var storageRef = FirebaseStorage.instance.ref("$path"
-        .replaceAll(RegExp("\\s+"), "")); //Create a Storage Ref / username
-    await storageRef.putFile(_pickedImage); //Upload photo to firebase storage
-    String url = await (storageRef.getDownloadURL());
-    return url;
+    if (_pickedImage != null) {
+      String comp = widget.companyName;
+      String userNew = user.uid;
+      String path = "$userNew/$comp/$invoiceID.jpeg"; //String of path
+      var storageRef = FirebaseStorage.instance.ref("$path"
+          .replaceAll(RegExp("\\s+"), "")); //Create a Storage Ref / username
+      await storageRef.putFile(_pickedImage); //Upload photo to firebase storage
+      String url = await (storageRef.getDownloadURL());
+      return url;
+    }
   }
-}
 
   // get user choice from filter list
   void choiceAction(String choice) {
-  if (choice == 'מספר חשבונית') {
-    sortBy = 'invoiceID';
-  } else if (choice == 'תאריך') {
-    sortBy = 'invoiceDate';
-  } else if (choice == 'תאריך פירעון') {
-    sortBy = 'invoiceDueDate';
-  } else if (choice == 'סכום') {
-    sortBy = 'invoiceSum';
+    if (choice == 'מספר חשבונית') {
+      sortBy = 'invoiceID';
+    } else if (choice == 'תאריך') {
+      sortBy = 'invoiceDate';
+    } else if (choice == 'תאריך פירעון') {
+      sortBy = 'invoiceDueDate';
+    } else if (choice == 'סכום') {
+      sortBy = 'invoiceSum';
+    }
   }
-}
-
-
 }

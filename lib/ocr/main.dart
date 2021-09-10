@@ -22,7 +22,9 @@ class _MainOcrState extends State<MainOcr> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: Scaffold(body: CameraScreen(title: widget.companyName)));
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(body: CameraScreen(title: widget.companyName)));
   }
 
 

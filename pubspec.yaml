@@ -96,6 +96,9 @@ dependencies:
   #Introduction screen
   introduction_screen: ^2.1.0
 
+  #After layout
+  after_layout: ^1.0.7+2
+
 
 
 

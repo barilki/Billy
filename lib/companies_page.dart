@@ -14,9 +14,9 @@ import 'icons/reusable_icon.dart';
 import 'login/log_page.dart';
 
 
-class BillyMainPage extends StatefulWidget {
+class CompaniesPage extends StatefulWidget {
   @override
-  _BillyMainPageState createState() => _BillyMainPageState();
+  _CompaniesPageState createState() => _CompaniesPageState();
 
   void init() {
     final AndroidInitializationSettings initializationSettingsAndroid =
@@ -30,7 +30,7 @@ class BillyMainPage extends StatefulWidget {
 
 }
 
-class _BillyMainPageState extends State<BillyMainPage> {
+class _CompaniesPageState extends State<CompaniesPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
 
